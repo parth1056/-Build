@@ -27,15 +27,15 @@ Local results and GitHub-hosted results identify their origin and are never pool
 
 ## What to show
 
-1. Select **Invoice engine**, conventional starting pipeline and source change. The screen shows exactly what changes: dependency installation moves before source copying; independent checks run together.
-2. Click **Run before / after**. This runs real pipelines, with separate seed builds to establish the cache condition. Watch stage outcomes and raw logs. One observation each is a live demonstration, not a final performance estimate.
-3. Select a **completed repeated experiment** in Saved experiment. Compare medians, ranges, source identity and actual stage timelines. All runs, including preparation/failures, remain inspectable.
-4. Select **Already optimized** to see an identical before/after plan: no new optimization is proposed. Use its measured control experiment to explain variation.
-5. Select Invoice engine and click **Prove broken code is blocked** to inject a calculation regression into an isolated source snapshot. Its original tests must catch the extra cent and block packaging. **Prove empty cache still works** checks correctness without reusable project work.
+1. The page opens with a saved comparison: **Before**, **After**, and **Time saved**. The selector beside The results switches between applications and experiments.
+2. Under Try it yourself, select **Invoice engine** and click **Compare builds**. This runs real pipelines, with separate builds to prepare the cache. One observation each is a preview, not a final performance estimate.
+3. Open **See how the builds ran** for stage timelines, ranges, source, Dockerfiles and raw logs. All runs, including preparation/failures, remain inspectable.
+4. Open **More experiments & settings** and select **Already optimized pipeline** to compare identical plans. Use the saved control experiment to explain timing variation.
+5. Click **Test a broken change** to inject a calculation regression into an isolated Invoice snapshot. Its original tests must catch the extra cent and block packaging. **Test without a cache**, under More experiments & settings, checks correctness without reusable project work.
 
 The other workloads are **Document publisher** (real compression/verification over a disclosed synthetic corpus) and **Release manifest validator** (small dependency-free control). Try them to explain why workloads behave differently. A dependency-upgrade scenario is available for Invoice engine only.
 
-Run four-way study performs three observations each for Before, Cache only, Parallel only and After. It is substantially longer than a quick demo. Never run experiments concurrently; a shared lock prevents this. The browser and CLI use the same runner.
+Compare all 4 methods performs three observations each for Before, Cache only, Parallel only and After. It is substantially longer than a quick demo. Never run experiments concurrently; a shared lock prevents this. The browser and CLI use the same runner.
 
 ## Evidence and claims
 
