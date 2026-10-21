@@ -31,3 +31,23 @@ out=root/'figures';out.mkdir(exist_ok=True)
 fig.savefig(out/'comparison.png',dpi=180,facecolor=fig.get_facecolor());fig.savefig(out/'comparison.svg',facecolor=fig.get_facecolor())
 (out/'figure-evidence.json').write_text(json.dumps(trace,indent=2),encoding='utf-8')
 print('Exported comparison PNG/SVG and exact contributing run IDs.')
+
+hosted=[x for x in experiments if x.get('execution',{}).get('platform')=='github-actions' and x['status']=='completed' and x['options']['scenario']=='source-change' and x['options']['repeats']==3 and x['options']['workloads']==['invoice'] and x['options']['modes']==['baseline','combined']]
+if hosted:
+ h=sorted(hosted,key=lambda x:x['startedAt'])[-1]
+ fig2,ax=plt.subplots(figsize=(8,5.7),facecolor='#f5f7f0');ax.set_facecolor('#f5f7f0');hosted_trace=[]
+ for idx,mode in enumerate(['baseline','combined']):
+  records=[r for r in h['runs'] if r['purpose']=='measurement' and r['mode']==mode]
+  assert len(records)==3 and all(r['status']=='passed' and r['releaseEligible'] for r in records)
+  values=[r['elapsedMs']/1000 for r in records];med=statistics.median(values)
+  ax.bar(idx,med,color=['#a6b09c','#477752'][idx],width=.52)
+  ax.errorbar(idx,med,yerr=[[med-min(values)],[max(values)-med]],fmt='none',ecolor='#314d35',capsize=6)
+  ax.scatter([idx-.07,idx,idx+.07],values,s=28,c='#203a27',zorder=5)
+  ax.text(idx,max(values)+.45,f'{med:.2f}s',ha='center',fontweight='bold',color='#27452d')
+  hosted_trace.extend({'experiment':h['id'],'run':r['id'],'seconds':r['elapsedMs']/1000,'githubRun':h['execution']['url']} for r in records)
+ ax.set_xticks([0,1],['Before','After']);ax.set_ylabel('Pipeline elapsed seconds');ax.grid(axis='y',alpha=.15);ax.set_axisbelow(True);ax.spines[['top','right']].set_visible(False);ax.set_ylim(0,max(x['seconds'] for x in hosted_trace)+2)
+ fig2.suptitle('Invoice engine on GitHub Actions',fontsize=17,color='#233d2a',fontweight='bold')
+ fig2.text(.11,.035,'3 observations per method · bars: medians · dots: all runs · whiskers: min–max\nWarm source-change case; two reported CPUs. Setup, seeds and cache transport\nare outside this pipeline timer. Descriptive sample; no universal speedup.',fontsize=8.5,color='#64755d')
+ fig2.subplots_adjust(left=.11,right=.94,bottom=.23,top=.86)
+ fig2.savefig(out/'hosted-comparison.png',dpi=180,facecolor=fig2.get_facecolor());fig2.savefig(out/'hosted-comparison.svg',facecolor=fig2.get_facecolor())
+ (out/'hosted-figure-evidence.json').write_text(json.dumps(hosted_trace,indent=2),encoding='utf-8')

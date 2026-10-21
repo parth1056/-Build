@@ -27,4 +27,6 @@ Node, base image, builder image and action commit SHAs are pinned. Docker Engine
 
 No registry publishing or production deployment is required. Evidence artifacts expire after 14 days: download those needed for the report. Never upload `.lab`, the original chat, classmates' sheet or the legacy backup; the workflow uploads only its explicit evidence paths. Workflows have read-only repository permissions and no custom secrets.
 
+To inspect downloaded hosted records in the local console, run `python v2/import-hosted.py <artifact.zip>`, then `node v2/audit.mjs`. The importer copies only experiment evidence, rejects unsafe paths and requires hosted provenance. Existing differing evidence is never overwritten. The console labels each experiment's platform and links back to its GitHub run; it does not pool machines into one percentage.
+
 Mechanism references: [GitHub workflow syntax](https://docs.github.com/en/actions/reference/workflows-and-actions/workflow-syntax), [GitHub artifacts](https://docs.github.com/en/actions/tutorials/store-and-share-data), [Docker cache backends](https://docs.docker.com/build/cache/backends/), [Docker GitHub cache management](https://docs.docker.com/build/ci/github-actions/cache/). These explain mechanisms; they do not establish a performance gain for our workloads.

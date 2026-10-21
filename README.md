@@ -4,6 +4,8 @@
 
 A live experiment console that runs real Docker builds, applies explicit pipeline changes, records elapsed times and verifies the exact output image. The demonstration is the build process, not taskboard buttons.
 
+**Measured on GitHub Actions:** Invoice engine's median pipeline time fell from **13.60s to 8.39s (38.3%)** across three observations per method, for a warm source-change scenario against the stated source-first/sequential baseline. This excludes setup, seeds and cache transfer. Separate local three-application results show smaller reductions and a tuned control has no new optimization to attribute. See [hosted results and limitations](v2/HOSTED-RESULTS.md) and [the actual run](https://github.com/parth1056/-Build/actions/runs/39629666103). A second successful hosted CI run restored the first run's portable dependency layers and reran every check.
+
 ## Start
 
 Open Docker Desktop and wait for its Linux container engine. In PowerShell:

@@ -33,7 +33,7 @@ Platform: **local**. Status: **completed**. Workloads: invoice, publisher, lean.
 | Before | 3 | 35.31 | 33.20–35.70 | 0.0% |
 | After | 3 | 29.65 | 28.59–29.87 | 16.0% |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The combined method saved about 5.66 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
 
@@ -44,7 +44,7 @@ The combined method saved about 5.66 seconds at the median. A cache hit or concu
 | Before | 3 | 30.80 | 29.63–32.18 | 0.0% |
 | After | 3 | 28.30 | 27.78–30.44 | 8.1% |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The combined method saved about 2.50 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
 
@@ -55,7 +55,7 @@ The combined method saved about 2.50 seconds at the median. A cache hit or concu
 | Before | 3 | 25.56 | 24.40–26.82 | 0.0% |
 | After | 3 | 23.06 | 22.16–23.21 | 9.8% |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The combined method saved about 2.50 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
 
@@ -72,7 +72,7 @@ Platform: **local**. Status: **completed**. Workloads: invoice. Starting pipelin
 | Parallel only | 3 | 29.88 | 29.35–31.52 | 10.4% |
 | After | 3 | 26.60 | 25.05–27.47 | 20.3% |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The combined method saved about 6.77 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
 
@@ -87,7 +87,7 @@ Platform: **local**. Status: **completed**. Workloads: lean. Starting pipeline: 
 | Before | 3 | 21.11 | 19.43–22.18 | not comparable |
 | After | 3 | 22.72 | 21.99–26.09 | not comparable |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The executable before/after plans are identical. Any timing difference is variability, not an additional optimization effect.
 
@@ -172,7 +172,7 @@ Platform: **github-actions**. [GitHub run](https://github.com/parth1056/-Build/a
 | Before | 3 | 13.60 | 13.31–14.92 | 0.0% |
 | After | 3 | 8.39 | 8.26–8.44 | 38.3% |
 
-Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+3 observations per method: descriptive evidence on this machine, not statistical significance. Source hashes match.
 
 The combined method saved about 5.21 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
 
@@ -189,6 +189,14 @@ Platform: **github-actions**. [GitHub run](https://github.com/parth1056/-Build/a
 Regular optimized CI, not a controlled before/after comparison. Cache transport and all fresh checks are retained in each run record. No reduction percentage is attributed.
 
 - invoice: passed; 19.30 seconds; imported cache available: false; dependency install layer reused: false; release eligible: true.
+
+## experiment-1792598386923-2b60e5
+
+Platform: **github-actions**. [GitHub run](https://github.com/parth1056/-Build/actions/runs/39630612177), commit 73bf8ac93d0339e68dfa6eddcc4bd6fdd8aca2b5. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: repository. Repetitions: 1.
+
+Regular optimized CI, not a controlled before/after comparison. Cache transport and all fresh checks are retained in each run record. No reduction percentage is attributed.
+
+- invoice: passed; 18.74 seconds; imported cache available: true; dependency install layer reused: true; release eligible: true.
 
 ## Interpretation boundaries
 
