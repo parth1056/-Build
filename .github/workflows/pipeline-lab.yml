@@ -31,20 +31,21 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22.21.0'
+          package-manager-cache: false
       - name: Test measurement and reporting logic
         run: npm test
-      - uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4 # v4
+      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5 # v5.6.0
         with:
           version: v28.0.4
           daemon-config: '{"features":{"containerd-snapshotter":true}}'
       - name: Restore portable BuildKit layers
-        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: .lab/ci-cache
           key: buildkit-linux-amd64-v1-${{ hashFiles('v2/inputs/*lock.json', 'v2/inputs/toolchain.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
@@ -61,7 +62,7 @@ jobs:
         run: node v2/github-run.mjs
       - name: Retain CI evidence even when a check fails
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           retention-days: 14
@@ -79,13 +80,14 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: '22.21.0'
-      - uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4 # v4
+          package-manager-cache: false
+      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5 # v5.6.0
         with:
           version: v28.0.4
           daemon-config: '{"features":{"containerd-snapshotter":true}}'
@@ -101,7 +103,7 @@ jobs:
         run: node v2/github-run.mjs
       - name: Retain sources, Dockerfiles, timings, output and raw logs
         if: always()
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: study-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           retention-days: 14
@@ -113,3 +115,4 @@ jobs:
             v2/verified-evidence.json
             v2/github-session.json
             v2/GITHUB-SUMMARY.md
+

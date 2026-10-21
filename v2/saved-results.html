@@ -149,25 +149,46 @@ The combined method saved about 3.75 seconds at the median. A cache hit or concu
 
 Platform: **local**. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: repository. Repetitions: 1.
 
-### Invoice engine
+Regular optimized CI, not a controlled before/after comparison. Cache transport and all fresh checks are retained in each run record. No reduction percentage is attributed.
 
-| Method | Observations | Median seconds | Min–max seconds | Reduction vs before |
-| --- | ---: | ---: | --- | ---: |
-| After | 1 | 34.09 | 34.09–34.09 | not comparable |
-
-Single-observation scenario check; preliminary, not a repeated performance estimate. Source hashes match.
+- invoice: passed; 34.09 seconds; imported cache available: false; dependency install layer reused: false; release eligible: true.
 
 ## experiment-1792597670336-fe565b
 
 Platform: **local**. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: repository. Repetitions: 1.
 
+Regular optimized CI, not a controlled before/after comparison. Cache transport and all fresh checks are retained in each run record. No reduction percentage is attributed.
+
+- invoice: passed; 42.35 seconds; imported cache available: true; dependency install layer reused: true; release eligible: true.
+
+## experiment-1792598006520-78a549
+
+Platform: **github-actions**. [GitHub run](https://github.com/parth1056/-Build/actions/runs/39629666103), commit de1acefe5a67a31d7182641226f874570a87b280. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: source-change. Repetitions: 3.
+
 ### Invoice engine
 
 | Method | Observations | Median seconds | Min–max seconds | Reduction vs before |
 | --- | ---: | ---: | --- | ---: |
-| After | 1 | 42.35 | 42.35–42.35 | not comparable |
+| Before | 3 | 13.60 | 13.31–14.92 | 0.0% |
+| After | 3 | 8.39 | 8.26–8.44 | 38.3% |
 
-Single-observation scenario check; preliminary, not a repeated performance estimate. Source hashes match.
+Three observations per method: descriptive local evidence, not statistical significance. Source hashes match.
+
+The combined method saved about 5.21 seconds at the median. A cache hit or concurrent schedule does not itself establish an end-to-end benefit.
+
+## experiment-1792598009542-8271c3
+
+Platform: **local**. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: failure. Repetitions: 1.
+
+- failure: expected outcome verified; pipeline failed, release blocked, packaging not attempted.
+
+## experiment-1792598015814-822983
+
+Platform: **github-actions**. [GitHub run](https://github.com/parth1056/-Build/actions/runs/39629666103), commit de1acefe5a67a31d7182641226f874570a87b280. Status: **completed**. Workloads: invoice. Starting pipeline: conventional. Scenario: repository. Repetitions: 1.
+
+Regular optimized CI, not a controlled before/after comparison. Cache transport and all fresh checks are retained in each run record. No reduction percentage is attributed.
+
+- invoice: passed; 19.30 seconds; imported cache available: false; dependency install layer reused: false; release eligible: true.
 
 ## Interpretation boundaries
 
