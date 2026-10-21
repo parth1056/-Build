@@ -17,7 +17,9 @@ function renderPlan(){
  if(!state)return;const w=$('#workload').value==='all'?'invoice':$('#workload').value;
  $('#workload-explanation').textContent=needs[$('#workload').value];
  const tuned=$('#starting').value==='tuned';
- $('.method').innerHTML=tuned?'<div><b>Before</b><span>Dependencies already cached.<br>Checks already run together.</span></div><div class="method-after"><b>After</b><span>The same optimized pipeline.<br>No additional change to apply.</span></div>':'<div><b>Before</b><span>Install dependencies again.<br>Run checks one at a time.</span></div><div class="method-after"><b>After</b><span>Reuse unchanged dependencies.<br>Run independent checks together.</span></div>';
+ const scenario=$('#scenario').value;
+ const install=scenario==='cold'?'Install dependencies; no cache.':scenario==='dependency-change'?'Install changed dependencies.':scenario==='unchanged'?'Reuse cached dependencies.':null;
+ $('.method').innerHTML=`<div><b>Before</b><span>${install??(tuned?'Reuse unchanged dependencies.':'Install dependencies again.')}<br>${tuned?'Checks already run together.':'Run checks one at a time.'}</span></div><div class="method-after"><b>After</b><span>${tuned?'The same optimized pipeline.':install??'Reuse unchanged dependencies.'}<br>${tuned?'No additional change to apply.':'Run independent checks together.'}</span></div>`;
  $('#decision').textContent=tuned?'This control uses identical pipelines. Differences in time are variation, not a new optimization.':'BuildKit is used in both pipelines. The changes are dependency reuse and the order in which checks run.';
  for(const key of ['before','after']){const p=state.plans[w][key];$('#'+key+'-description').textContent=key==='before'?'Before':'After';$('#'+key+'-plan').textContent=p.dockerfile+'\nCHECKS '+p.checks.join(p.parallel?' + ':' → ')+'\nBUILD → PACKAGE → VERIFY';}
 }
@@ -80,5 +82,5 @@ async function start(type){try{
  }catch(e){$('#action-error').textContent=e.message;}}
 for(const id of ['compare','study','failure','miss'])$('#'+id).onclick=()=>start(id);
 $('#cancel').onclick=async()=>{try{const response=await fetch('/api/cancel',{method:'POST'});if(!response.ok)throw Error('Could not request a stop.');$('#action-error').textContent='Stopping after the current command finishes.';}catch(e){$('#action-error').textContent=e.message;}};
-$('#workload').onchange=()=>{lastRender='';if(state)render();};$('#starting').onchange=()=>{state=null;};$('#history').onchange=e=>{history=e.target.value;};
+$('#workload').onchange=()=>{lastRender='';if(state)render();};$('#starting').onchange=()=>{renderPlan();state=null;};$('#scenario').onchange=renderPlan;$('#history').onchange=e=>{history=e.target.value;};
 void poll();
