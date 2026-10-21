@@ -1,0 +1,15 @@
+{
+  "schema":1,
+  "name":"shipping-quote",
+  "baseImage":"node@sha256:f9f7f95dcf1f007b007c4dcd44ea8f7773f931b71dc79d57c216e731c87a090b",
+  "workspace":{"before":"Dockerfile.before","after":"Dockerfile.after","target":"workspace"},
+  "checks":[{"name":"syntax","command":["node","--check","src/main.mjs"]},{"name":"contract","command":["node","check.mjs"]},{"name":"tests","command":["node","--test","tests/quote.test.mjs"]}],
+  "build":{"command":["node","build.mjs"],"output":"/app/dist"},
+  "runtime":{"dockerfile":"Dockerfile.runtime"},
+  "verify":{"command":["node","src/main.mjs"],"expected":{"application":"shipping-quote","feeCents":900,"release":"v1"},"changedExpected":{"application":"shipping-quote","feeCents":900,"release":"v2"}},
+  "change":{"file":"src/release.json","from":"\"v1\"","to":"\"v2\""},
+  "failure":{"file":"src/quote.mjs","from":"return 500 +","to":"return 501 +"},
+  "dependencyStep":"npm ci",
+  "exclude":["dist"],
+  "options":{"parallelism":3,"timeoutSeconds":300,"cpus":1,"memory":"1g","network":"none"}
+}

@@ -5,9 +5,9 @@
 **Team:** Parth Dhande and Pushkar Rai, Batch 3  
 **Report date:** 21 October 2026, India Standard Time  
 **CI platform:** GitHub Actions  
-**Implementation reviewed:** repository source at `dd44bd1a10775e3284b7b7e29ab4624ea07531a5`, plus the retained experiments identified below.
+**Implementation reviewed:** original demo source at `dd44bd1a10775e3284b7b7e29ab4624ea07531a5`, plus the retained experiments identified below; custom CLI addendum implemented and integration-checked on 21 October 2026.
 
-This report separates implemented features, observed measurements, interpretations and proposed extensions. A percentage is an experimental observation, not an advertised guarantee. The accompanying [report-data.json](v2/report-data.json) contains the run identifiers, exact numeric observations, stage intervals, source identities and verification results used here. No new performance experiment was run merely to write this report.
+This report separates implemented features, observed measurements, interpretations and proposed extensions. A percentage is an experimental observation, not an advertised guarantee. The accompanying [report-data.json](v2/report-data.json) contains the run identifiers, exact numeric observations, stage intervals, source identities and verification results used here. The original performance tables use retained experiments. Section 17 additionally documents the separately requested custom CLI and its new integration checks; those checks are not pooled into the original three-app performance study.
 
 ## Contents
 
@@ -142,6 +142,10 @@ Checks run sequentially or concurrently according to the selected plan. The arti
 | [v2/load-demo.mjs](v2/load-demo.mjs) and [sample manifest](v2/samples/manifest.json) | Restore genuine GitHub evidence on a fresh clone without Docker. |
 | [v2/import-hosted.py](v2/import-hosted.py) | Imports downloaded workflow experiment evidence without executing captured code. |
 | [v2/report-data.json](v2/report-data.json) | Numeric/provenance snapshot supporting this detailed report. |
+| [custom/README.md](custom/README.md), [custom/cli.mjs](custom/cli.mjs), [custom/runner.mjs](custom/runner.mjs) | Separate local-project adapter CLI; full contract, execution, caching and exact-image verification. |
+| [custom/config.mjs](custom/config.mjs) and [custom examples](custom/examples/) | Configuration/source/output validation and runnable Node/Python integration fixtures. |
+| [custom/VALIDATION.md](custom/VALIDATION.md), [validation observations](custom/validation-results.json), [validation driver](custom/validate.mjs) | Custom integration evidence and a rerunnable assertion-based Docker validation matrix. |
+| [v2/tests/custom.test.mjs](v2/tests/custom.test.mjs) | Six additional adapter/gate/identity/comparison tests; 17 tests overall. |
 
 Generated `v2/workloads/`, live `v2/evidence/`, `.lab/` caches and `node_modules/` are not committed. Setup regenerates what is needed. The committed sample archive preserves selected GitHub evidence independently of GitHub artifact expiry. Private original attachments, classmates' raw sheet and the old project backup stay outside the repository.
 
@@ -953,7 +957,7 @@ Do not rerun a 72-pipeline campaign during a short faculty slot unless explicitl
 | What if one test fails? | Packaging is blocked. A deliberately injected failure is a successful proof only when that required check fails and packaging does not happen. |
 | Did you deploy anything to production? | No. Release eligibility records the gate's success. Registry publishing/production rollout are outside the claim. |
 | Why Node for orchestration and Python for some analysis? | Node already runs the console and workloads; its native APIs avoid root dependencies. Optional Python supplies a second statistics/plan implementation and figure generation. Ordinary operation needs no Python. |
-| Can it build any application now? | The website supports only its registered workloads. A custom Docker application needs a declared build/check/output contract; Section 17 distinguishes the planned extension from existing demo behavior. |
+| Can it build any application now? | The website supports its three registered workloads. The separate custom CLI builds local Docker projects that supply its explicit workspace/check/artifact/runtime/verification adapter. Node and Python integrations were exercised; it cannot automatically configure an arbitrary repository or orchestrate services. See Section 17. |
 | Have you proved it has no bugs? | No. We have evidence for defined contracts, not exhaustive correctness or security. |
 
 ### 15.4 Avoid these claims
@@ -974,21 +978,56 @@ There are still useful results within these boundaries: actual layer reuse, real
 
 ## 17. Custom applications and future work
 
-### 17.1 Honest position before the CLI extension
+### 17.1 Why a separate custom CLI
 
-At the implementation snapshot reviewed above, the website and controlled-demo CLI validate workload names against three fixed definitions. There is no supported arbitrary-folder or repository-URL input. Passing another name is rejected. Copying a random project into a workload directory is insufficient because checks, build artifacts, runtime commands, scenario mutations and verification expectations are workload-specific.
+The website and original controlled-demo CLI still validate workload names against three fixed definitions. Passing another name is rejected. Copying a random project into a workload directory is insufficient because checks, build artifacts, runtime commands, scenario mutations and verification expectations are workload-specific. The requested extension is therefore a separate local-project tool, leaving the website's clear three-app demonstration intact.
 
 A universal paste-a-URL optimizer would need to handle languages, build systems, dependency services, secrets, private registries, incompatible tests, output formats and ambiguous correctness criteria. It could not safely infer that faster output is equivalent just because a shell command returned zero.
 
-### 17.2 Proposed custom CLI contract
+### 17.2 Implemented custom CLI contract
 
-The practical next extension is a separate CLI for a **user-provided Docker application and explicit adapter configuration**. The website can remain a clear fixed demonstration. The adapter should declare workspace Dockerfiles, required independent checks, artifact build/output path, runtime packaging and verification assertions. A comparison should accept genuine before/after configurations; it must not label arbitrary rewriting as automatic optimization.
+The implemented extension is `custom/cli.mjs`, invoked through `npm.cmd run custom:build -- ...`. It accepts a **local Docker application and explicit adapter configuration**, normally `pipeline-lab.json` inside that project. Its complete operational documentation, every adapter field, every flag, runnable examples and supported boundaries are in [custom/README.md](custom/README.md). It has no root npm dependencies. Host Python is unnecessary for the supplied Python example because execution happens inside a pinned image.
 
-The CLI should capture source/plan identities, bound execution, keep raw results separately, reject invalid configurations, stop packaging after checks fail and verify the exact final image. Source-change experiments need an explicit, repeatable change and expected changed output. Applications needing databases/services or unusual packaging require additional contracts and should fail clearly when unsupported.
+The adapter declares workspace Dockerfiles, 1–8 required independent check commands, the artifact build command/output directory, runtime packaging and nonempty expected JSON output. Before runs checks sequentially; After uses up to three concurrent check containers. Both use the same declared checks, artifact build and runtime verification. Comparisons require an explicit Before Dockerfile rather than inventing an inefficient baseline. Source-change experiments require an exact-once text replacement and distinct changed-output assertions. A broken-change fixture must fail a required check and block packaging to count as a successful rejection proof.
 
-This is a proposal at this report stage, not an implemented website feature. Once the separately requested CLI is implemented and tested, the operational addendum must document its real commands, supported boundaries and integration evidence.
+After successful checks, a fresh workspace container builds artifacts. The runner copies and hashes every artifact file, including packaged libraries, and gives only that directory to the runtime Dockerfile. It resolves the resulting image ID and runs the verification command against that exact ID. The command must exit zero and print one JSON object satisfying the declared keys/values/types. Extra actual object keys are allowed. Configured tests and output assertions are a defined correctness gate, not exhaustive proof of application correctness.
 
-### 17.3 Prioritized future work
+Source/plan manifests, raw logs, stage timings, artifact hashes, image IDs, observed JSON and environment details are retained under `.lab/custom-evidence/`. They remain outside website history and Git uploads. Repository mode imports a local portable cache into a fresh builder and promotes its candidate export only after the final verification passes. Controlled scenarios reset per method/repetition; source-change/unchanged/failure seed separately, while cold has no seed. The timer covers workspace construction through final-image verification. Setup/base preparation, source staging, seeds and cleanup are excluded. Repository-mode layer import/export occurs inside workspace timing. A custom Dockerfile may install over the network, unlike the original offline-input study; keep their results separate.
+
+### 17.3 Commands and what they demonstrate
+
+From the cloned repository root with Docker running:
+
+```powershell
+# Build and verify the current custom app; repeat to import its saved layers.
+npm.cmd run custom:build -- --project custom/examples/node --trust-project
+
+# Reset and seed both plans, apply a real output change, compare three samples each.
+npm.cmd run custom:build -- --project custom/examples/node --mode compare --scenario code-change --repeats 3 --trust-project
+
+# A deliberately broken price calculation must fail checks before packaging.
+npm.cmd run custom:build -- --project custom/examples/node --scenario failure --trust-project
+
+# Different language, no host Python installation needed.
+npm.cmd run custom:build -- --project custom/examples/python --scenario cold --trust-project
+
+# Substitute another prepared local project containing its own adapter.
+npm.cmd run custom:build -- --project "C:/path/to/your-app" --trust-project
+```
+
+The Node fixture calculates shipping quotes using a real locked Zod dependency. An express 1 kg quote must be 900 cents; tests also cover other prices and invalid input. Its observed release changes from `v1` to `v2`; adding one cent to the calculation is the injected bug. The Python fixture reads three CSV orders totaling 6,000 cents, checks IDs/amounts, packages its CSV and code, and verifies the resulting image. It has no third-party packages, so it demonstrates language portability rather than a large dependency-cache benefit. These are additional adapter fixtures; they do not replace or change the original Invoice/Publisher/Validator workload definitions.
+
+One controlled comparison repetition executes four pipelines: seed and measurement for Before, then seed and measurement for After. Three repetitions execute twelve. Only measurements enter medians. The tool keeps negative reductions, refuses an attributed percentage for identical effective plans or mismatched sources and marks short samples as previews. No universal speedup is promised for custom apps.
+
+### 17.4 Validation and remaining boundaries
+
+[Custom validation evidence](custom/VALIDATION.md) and [machine-readable observations](custom/validation-results.json) record the actual local integration cases, separate from performance tables. The core/unit suite includes six added adapter tests, making 17 tests overall. They cover path/resource/command validation, honest scenario requirements, output assertion failures, base-image contracts, source exclusions, artifact-library hashing and invalid/negative comparisons. Real Docker integration checks cover cache restoration, both plans on the same changed source, an intentionally faulty calculation, Python packaging and a final-image output mismatch.
+
+Custom source snapshots exclude common generated directories and `.env` files, reject symlinks/junctions, and enforce source file/size limits. Other sensitive files are not detected automatically; review snapshots/logs before sharing. Source and artifact identities hash paths and contents, not file permission bits or empty directories. Apps relying on executable permissions should set them explicitly in containers. The adapter requires trusted project code (`--trust-project`), not untrusted uploads. It provides no Compose/database lifecycle, secret forwarding, automatic URL cloning, automatic HTTP probe, registry publishing or deployment. It currently requires Linux x64 Docker with containerd storage and Buildx. An HTTP app needs its own finite verification wrapper; a long-running server command alone will time out.
+
+The website and custom runner share a checkout lock to avoid simultaneous builds. Custom raw data stays local. The existing GitHub Actions demo workflow does not automatically run custom adapters; adding such a job and portable cache transport remains an explicit integration task for the app owner. Final custom images are retained for inspection, including ineligible failed-verification images. Cleanup instructions and precise field/flag contracts are in the custom guide.
+
+### 17.5 Prioritized future work
 
 | Priority | Extension | Reason / how to evaluate |
 | --- | --- | --- |

@@ -8,6 +8,7 @@
     "start": "node v2/server.mjs",
     "demo": "node v2/server.mjs",
     "lab:demo-data": "node v2/load-demo.mjs",
+    "custom:build": "node custom/cli.mjs",
     "test": "node --test v2/tests/*.test.mjs",
     "lab:setup": "node v2/setup.mjs",
     "lab:prepare": "node v2/prepare.mjs",

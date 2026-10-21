@@ -10,6 +10,14 @@ A live experiment console that runs real Docker builds, applies explicit pipelin
 
 ## Set up after cloning
 
+For a **different app**, use the separate [custom-app CLI](custom/README.md). The website keeps its three demo workloads. A local app supplies Dockerfiles and a `pipeline-lab.json` build/check/output adapter; the tool does not automatically configure arbitrary repositories. With Node and Docker ready, try:
+
+```powershell
+npm.cmd run custom:build -- --project custom/examples/node --trust-project
+```
+
+The guide also covers a Python example, repeated before/after comparisons, deliberate-failure proofs, every option and [integration validation](custom/VALIDATION.md).
+
 This repository is private. The owner must invite your GitHub account under **Settings → Collaborators → Add people**; accept the invitation before cloning. A repository link alone does not grant access. See [GitHub's invitation instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/inviting-collaborators-to-a-personal-repository).
 
 ### 1. Install the tools
