@@ -1,0 +1,115 @@
+name: Pipeline Lab
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 'Experiment: pilot = before/after; full = all studies and failure proofs'
+        type: choice
+        options: [pilot, four-way, full, tuned, failure, cache-miss, dependency-change, cold, unchanged]
+        default: pilot
+      workload:
+        description: 'Example application (dependency-change needs invoice)'
+        type: choice
+        options: [invoice, publisher, lean]
+        default: invoice
+      repeats:
+        description: 'Observations per method (1 is a preview; use at least 3 for conclusions)'
+        type: choice
+        options: ['1', '3', '5']
+        default: '3'
+permissions:
+  contents: read
+concurrency:
+  group: pipeline-lab-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  ci:
+    name: Optimized CI / fresh checks / portable cache
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.21.0'
+      - name: Test measurement and reporting logic
+        run: npm test
+      - uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4 # v4
+        with:
+          version: v28.0.4
+          daemon-config: '{"features":{"containerd-snapshotter":true}}'
+      - name: Restore portable BuildKit layers
+        uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .lab/ci-cache
+          key: buildkit-linux-amd64-v1-${{ hashFiles('v2/inputs/*lock.json', 'v2/inputs/toolchain.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            buildkit-linux-amd64-v1-${{ hashFiles('v2/inputs/*lock.json', 'v2/inputs/toolchain.json') }}-
+            buildkit-linux-amd64-v1-
+      - name: Pin inputs and generate example applications
+        run: |
+          node v2/setup.mjs
+          node v2/prepare.mjs
+      - name: Reuse dependencies; run independent checks together; verify the image
+        env:
+          LAB_SUITE: ci
+        run: node v2/github-run.mjs
+      - name: Retain CI evidence even when a check fails
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          include-hidden-files: true
+          path: |
+            v2/evidence/
+            v2/RESULTS.md
+            v2/runs.csv
+            v2/verified-evidence.json
+            v2/github-session.json
+            v2/GITHUB-SUMMARY.md
+  study:
+    name: Controlled comparison (one machine, rotating order)
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[study]'))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '22.21.0'
+      - uses: docker/setup-docker-action@e43656e248c0bd0647d3f5c195d116aacf6fcaf4 # v4
+        with:
+          version: v28.0.4
+          daemon-config: '{"features":{"containerd-snapshotter":true}}'
+      - name: Prepare identical pinned inputs (outside pipeline timing)
+        run: |
+          node v2/setup.mjs
+          node v2/prepare.mjs
+      - name: Measure the selected comparison and record every observation
+        env:
+          LAB_SUITE: ${{ inputs.suite || 'pilot' }}
+          LAB_WORKLOAD: ${{ inputs.workload || 'invoice' }}
+          LAB_REPEATS: ${{ inputs.repeats || '3' }}
+        run: node v2/github-run.mjs
+      - name: Retain sources, Dockerfiles, timings, output and raw logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: study-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          retention-days: 14
+          include-hidden-files: true
+          path: |
+            v2/evidence/
+            v2/RESULTS.md
+            v2/runs.csv
+            v2/verified-evidence.json
+            v2/github-session.json
+            v2/GITHUB-SUMMARY.md
