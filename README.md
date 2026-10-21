@@ -6,18 +6,90 @@ A live experiment console that runs real Docker builds, applies explicit pipelin
 
 **Measured on GitHub Actions:** Invoice engine's median pipeline time fell from **13.60s to 8.39s (38.3%)** across three observations per method, for a warm source-change scenario against the stated source-first/sequential baseline. This excludes setup, seeds and cache transfer. Separate local three-application results show smaller reductions and a tuned control has no new optimization to attribute. See [hosted results and limitations](v2/HOSTED-RESULTS.md) and [the actual run](https://github.com/parth1056/-Build/actions/runs/39629666103). A second successful hosted CI run restored the first run's portable dependency layers and reran every check.
 
-## Start
+## Set up after cloning
 
-Open Docker Desktop and wait for its Linux container engine. In PowerShell:
+This repository is private. The owner must invite your GitHub account under **Settings → Collaborators → Add people**; accept the invitation before cloning. A repository link alone does not grant access. See [GitHub's invitation instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/inviting-collaborators-to-a-personal-repository).
+
+### 1. Install the tools
+
+- [Git](https://git-scm.com/downloads) to clone/pull the project.
+- [Node.js](https://nodejs.org/en/download): choose **Node 22, version 22.21.0 or newer within the 22.x family**. It includes npm. Close and reopen your terminal after installation.
+- For **new builds**, [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) on a Windows x64 machine (Intel/AMD), with Linux containers. On Windows, use the WSL 2 engine. In Docker Desktop → Settings → General, enable **Use containerd for pulling and storing images**, then Apply/Restart if changed. See [Docker's containerd setting](https://docs.docker.com/desktop/features/containerd/). Linux x64 with a compatible Docker/containerd image store also works; the current harness rejects ARM/Apple Silicon engines.
+
+A 16 GB machine with roughly 8 GB available to Docker is recommended for new experiments. Viewing saved results needs only Node. Initial Docker/input setup requires internet; the measured installation/check steps use prepared offline inputs. No Jenkins, Python, paid cloud deployment or custom secret is required for the normal demo.
+
+### 2. Clone and open the project
+
+In PowerShell, from the folder where you keep projects:
 
 ```powershell
-cd "C:\Users\parth\Desktop\CS\Devops Lab CA"
+git clone https://github.com/parth1056/-Build.git pipeline-lab
+cd pipeline-lab
+node --version
+```
+
+Sign in to your own GitHub account if Git requests authentication. The version command should print `v22.21.0` or a later `v22.x`. All remaining commands run **inside this cloned folder**. On Windows use `npm.cmd` as shown to avoid PowerShell blocking `npm.ps1`. On Linux use `npm` instead.
+
+### 3. Load the existing demo results
+
+```powershell
+npm.cmd run lab:demo-data
+npm.cmd test
+```
+
+The first command restores the included, integrity-checked GitHub evidence: one repeated before/after study and two real CI builds. It includes captured source, Dockerfiles, timings, logs and verified output. These are **saved measurements**, not builds on your machine. Loading them again is safe; differing existing evidence is never overwritten. The tests check the coordinator's comparison/reporting logic. There is no root dependency installation to perform: the console uses Node's built-in libraries.
+
+To **only view** the existing demo now, run `npm.cmd run demo`, then open **http://127.0.0.1:4180**. Docker is not needed for viewing. Skip step 4 if you do not want to run fresh builds yet.
+
+### 4. Prepare to run new builds
+
+Start Docker Desktop and wait until its engine is running. If the demo is already open, stop its terminal with Ctrl+C before this first-time setup.
+
+```powershell
+docker info --format '{{.OSType}}/{{.Architecture}}'
+npm.cmd run lab:setup
+npm.cmd run lab:prepare
 npm.cmd run demo
 ```
 
-Open **http://127.0.0.1:4180**. Viewing saved results works without Docker; starting new experiments requires it. Ctrl+C stops the console; if it started an active experiment, it requests a stop and waits for cleanup.
+- Docker should report `linux/x86_64` or `linux/amd64`.
+- `lab:setup` prepares the pinned Docker images and integrity-verified package archives. These downloads can take a few minutes.
+- `lab:prepare` generates the three example applications from the committed source generators and lockfiles. No timings are invented.
+- `demo` starts the control panel at **http://127.0.0.1:4180**. Keep its terminal open while using it.
 
-The machine is already prepared. The console has no external npm dependencies. On a clean machine, install Node 22.21+ in the Node 22 family and Docker Desktop with Linux x64/containerd image store; run `node v2/setup.mjs`, then `node v2/prepare.mjs`. Initial setup requires internet. The prepared `.lab` inputs must remain at their configured paths; rerun setup after relocation. Stop other heavy applications for measurements.
+Docker caches, package archives and generated applications are intentionally created on each teammate's machine, rather than copied from the original laptop. If you move the project directory, rerun setup and preparation because `.lab/environment.json` records absolute paths. Close other heavy applications before measurements. Your machine's timings may differ from the retained GitHub results.
+
+### 5. What to do in the website
+
+1. The initial **13.60s → 8.39s** comparison is the saved GitHub experiment. Open **See how the builds ran** for its actual evidence.
+2. Under **Try it yourself**, choose **Invoice engine → Compare builds**. This starts new builds on your own Docker engine. Cache-preparation builds run before the timed comparison; allow a few minutes.
+3. When finished, inspect Before, After and Time saved. One pair is a preview; it is not a repeated performance estimate.
+4. Try **Test a broken change**. A deliberately incorrect invoice calculation should be rejected before packaging. The expected outcome is **Broken change caught. Output blocked.**
+5. For the wider study, try the other applications or expand **More experiments & settings**. The four-method comparison runs three observations each and takes longer.
+
+Never run two experiments on the same machine at once. A shared lock prevents overlap. Ctrl+C stops the console; if it started a build, allow it to finish the current command and clean up.
+
+### Next time you open the project
+
+```powershell
+git pull
+npm.cmd run demo
+```
+
+Start Docker first if running new builds. After changes to build inputs, rerun `lab:setup` and `lab:prepare` before comparing new results; this refreshes generated applications and package inputs. Keep old measurements as historical evidence. There is no need to reload sample data or repeat setup just to view saved results.
+
+### Common setup problems
+
+| Problem | What to do |
+| --- | --- |
+| Repository not found / access denied | Accept the private-repo invitation and authenticate as that GitHub account. |
+| `node`, `git` or `docker` not recognized | Install the corresponding tool and reopen the terminal. |
+| `npm.ps1` is blocked | Use `npm.cmd` in PowerShell. |
+| Cannot connect to the Docker daemon | Open Docker Desktop and wait for its Linux engine. |
+| Base export must be OCI format | Enable Docker's containerd image store. If setup left an incomplete `.lab/base-oci-*` directory, stop builds and rename that specific generated directory, then rerun `lab:setup`. Do not delete the entire `.lab` folder. |
+| Port 4180 already in use | A demo may already be running; use that page, or stop its terminal before starting another. |
+| Another experiment is active | Wait for its terminal/run to finish. Do not remove an active lock. |
+| No saved results | Run `npm.cmd run lab:demo-data`, then refresh the page. |
 
 ## GitHub Actions
 
@@ -27,7 +99,7 @@ Local results and GitHub-hosted results identify their origin and are never pool
 
 ## What to show
 
-1. The page opens with a saved comparison: **Before**, **After**, and **Time saved**. The selector beside The results switches between applications and experiments.
+1. After loading demo data, the page opens with a saved comparison: **Before**, **After**, and **Time saved**. The selector beside The results switches between applications and experiments.
 2. Under Try it yourself, select **Invoice engine** and click **Compare builds**. This runs real pipelines, with separate builds to prepare the cache. One observation each is a preview, not a final performance estimate.
 3. Open **See how the builds ran** for stage timelines, ranges, source, Dockerfiles and raw logs. All runs, including preparation/failures, remain inspectable.
 4. Open **More experiments & settings** and select **Already optimized pipeline** to compare identical plans. Use the saved control experiment to explain timing variation.
@@ -55,4 +127,8 @@ npm.cmd test
 npm.cmd run lab:audit
 ```
 
-`v2/` is the redesigned implementation. On the original machine, `context/` contains re-extracted attachment context and `backup/` preserves the previous project. Those private reference files are excluded from GitHub. Legacy timings are not pooled with this project. Source and canonical lockfile inputs are self-contained; the preparation script generates all example workloads.
+## What is included in the repository
+
+The source code, simplified UI, GitHub Actions workflow, pinned toolchain/lockfiles, workload generators, tests, documentation, result summaries, figures and a ~600 KB bundle of verified GitHub evidence are committed. `v2/samples/manifest.json` identifies the bundled runs and archive hash. Loading it and generating fresh applications requires no files from the original laptop.
+
+Machine-specific `.lab` caches, generated `v2/workloads`, new `v2/evidence` results, `node_modules`, private assessment attachments/chat and the old project backup are excluded. Those exclusions are intentional: setup regenerates the required inputs, and the included sample bundle supplies the shared historical demo. Original private context remains on the owner's machine; it is not needed to build or demonstrate this project.
