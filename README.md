@@ -1,144 +1,74 @@
-# Pipeline Lab
+# CI Build Time Lab — fresh two-app study
 
 **Reducing CI Pipeline Build Time Using Dependency Caching, Parallel Stages and Docker BuildKit**
 
-For the complete explanation of the applications, every website setting, measurements, limitations, architecture and demonstration, read the [detailed project report](PROJECT_REPORT.md).
+Branch: `codex/two-app-fresh-demo`. This branch replaces the earlier applications, generated-workload system, reports and old measurements with two directly committed applications and a new study. The original project remains on `main` and in Git history. The reusable trusted Docker runner, adapter validation and some interface styling were retained and refactored because they implement the required functionality.
 
-A live experiment console that runs real Docker builds, applies explicit pipeline changes, records elapsed times and verifies the exact output image. The demonstration is the build process, not taskboard buttons.
+| Application | Actual functionality | Starting pipeline |
+|---|---|---|
+| Inventory Reservations API | Validates stock reservations, prevents overselling and repeated-request double counting, exposes low-stock products. TypeScript, Hono and Zod. | Simple source-first dependency layer and sequential lint/type/test checks. Other sensible practices are already present. |
+| StatusLens Dashboard | React dashboard classifying service observations using configurable latency/error limits. Vite production assets and generated status data. | Dependency-first layers, package cache mount, concurrent checks, bounded build context and minimal runtime artifacts already present. Before/After plans are identical. |
 
-**Measured on GitHub Actions:** Invoice engine's median pipeline time fell from **13.60s to 8.39s (38.3%)** across three observations per method, for a warm source-change scenario against the stated source-first/sequential baseline. This excludes setup, seeds and cache transfer. Separate local three-application results show smaller reductions and a tuned control has no new optimization to attribute. See [hosted results and limitations](v2/HOSTED-RESULTS.md) and [the actual run](https://github.com/parth1056/-Build/actions/runs/39629666103). A second successful hosted CI run restored the first run's portable dependency layers and reran every check.
+These are realistic authored lab applications, not sampled production repositories. There are no artificial waits, repeated benchmark loops or dependencies added solely to inflate savings. Optimization refers to their **build pipelines**, not faster API responses or browser rendering. The control is well configured for this scope, not a claim that no future optimization anywhere is possible.
 
-## Set up after cloning
+## Start after cloning
 
-For a **different app**, use the separate [custom-app CLI](custom/README.md). The website keeps its three demo workloads. A local app supplies Dockerfiles and a `pipeline-lab.json` build/check/output adapter; the tool does not automatically configure arbitrary repositories. With Node and Docker ready, try:
-
-```powershell
-npm.cmd run custom:build -- --project custom/examples/node --trust-project
-```
-
-The guide also covers a Python example, repeated before/after comparisons, deliberate-failure proofs, every option and [integration validation](custom/VALIDATION.md).
-
-This repository is private. The owner must invite your GitHub account under **Settings → Collaborators → Add people**; accept the invitation before cloning. A repository link alone does not grant access. See [GitHub's invitation instructions](https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/repository-access-and-collaboration/inviting-collaborators-to-a-personal-repository).
-
-### 1. Install the tools
-
-- [Git](https://git-scm.com/downloads) to clone/pull the project.
-- [Node.js](https://nodejs.org/en/download): choose **Node 22, version 22.21.0 or newer within the 22.x family**. It includes npm. Close and reopen your terminal after installation.
-- For **new builds**, [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) on a Windows x64 machine (Intel/AMD), with Linux containers. On Windows, use the WSL 2 engine. In Docker Desktop → Settings → General, enable **Use containerd for pulling and storing images**, then Apply/Restart if changed. See [Docker's containerd setting](https://docs.docker.com/desktop/features/containerd/). Linux x64 with a compatible Docker/containerd image store also works; the current harness rejects ARM/Apple Silicon engines.
-
-A 16 GB machine with roughly 8 GB available to Docker is recommended for new experiments. Viewing saved results needs only Node. Initial Docker/input setup requires internet; the measured installation/check steps use prepared offline inputs. No Jenkins, Python, paid cloud deployment or custom secret is required for the normal demo.
-
-### 2. Clone and open the project
-
-In PowerShell, from the folder where you keep projects:
+This is a private repo; teammates need collaborator access. With Git, Node 24 LTS (host Node 22.21+ also runs the console) and Docker Desktop installed:
 
 ```powershell
-git clone https://github.com/parth1056/-Build.git pipeline-lab
-cd pipeline-lab
-node --version
-```
-
-Sign in to your own GitHub account if Git requests authentication. The version command should print `v22.21.0` or a later `v22.x`. All remaining commands run **inside this cloned folder**. On Windows use `npm.cmd` as shown to avoid PowerShell blocking `npm.ps1`. On Linux use `npm` instead.
-
-### 3. Load the existing demo results
-
-```powershell
-npm.cmd run lab:demo-data
+git clone --branch codex/two-app-fresh-demo --single-branch https://github.com/parth1056/-Build.git pipeline-lab-fresh
+cd pipeline-lab-fresh
 npm.cmd test
-```
-
-The first command restores the included, integrity-checked GitHub evidence: one repeated before/after study and two real CI builds. It includes captured source, Dockerfiles, timings, logs and verified output. These are **saved measurements**, not builds on your machine. Loading them again is safe; differing existing evidence is never overwritten. The tests check the coordinator's comparison/reporting logic. There is no root dependency installation to perform: the console uses Node's built-in libraries.
-
-To **only view** the existing demo now, run `npm.cmd run demo`, then open **http://127.0.0.1:4180**. Docker is not needed for viewing. Skip step 4 if you do not want to run fresh builds yet.
-
-### 4. Prepare to run new builds
-
-Start Docker Desktop and wait until its engine is running. If the demo is already open, stop its terminal with Ctrl+C before this first-time setup.
-
-```powershell
-docker info --format '{{.OSType}}/{{.Architecture}}'
-npm.cmd run lab:setup
-npm.cmd run lab:prepare
 npm.cmd run demo
 ```
 
-- Docker should report `linux/x86_64` or `linux/amd64`.
-- `lab:setup` prepares the pinned Docker images and integrity-verified package archives. These downloads can take a few minutes.
-- `lab:prepare` generates the three example applications from the committed source generators and lockfiles. No timings are invented.
-- `demo` starts the control panel at **http://127.0.0.1:4180**. Keep its terminal open while using it.
+Open **http://127.0.0.1:4180**. Viewing committed results needs only Node. For new builds, start Docker Desktop with a Linux x64 engine, Buildx and **Use containerd for pulling and storing images** enabled. Docker must have enough memory for a 3 GiB builder plus up to three 1 GiB check containers and its own overhead. Initial base/dependency downloads need internet. No root `npm install`, `lab:setup`, `lab:prepare` or sample-data restoration is needed on this branch: both apps, locks and new saved evidence are committed directly. On Linux use `npm` instead of `npm.cmd`.
 
-Docker caches, package archives and generated applications are intentionally created on each teammate's machine, rather than copied from the original laptop. If you move the project directory, rerun setup and preparation because `.lab/environment.json` records absolute paths. Close other heavy applications before measurements. Your machine's timings may differ from the retained GitHub results.
+The first build downloads pinned images/dependencies and may take longer. The runner pulls/prepares bases before its pipeline timer; dependency operations in the app Dockerfile are inside it. Keep the terminal running. Ctrl+C requests cancellation and cleanup if a web experiment is active.
 
-### 5. What to do in the website
+## Demonstrate
 
-1. The initial **13.60s → 8.39s** comparison is the saved GitHub experiment. Open **See how the builds ran** for its actual evidence.
-2. Under **Try it yourself**, choose **Invoice engine → Compare builds**. This starts new builds on your own Docker engine. Cache-preparation builds run before the timed comparison; allow a few minutes.
-3. When finished, inspect Before, After and Time saved. One pair is a preview; it is not a repeated performance estimate.
-4. Try **Test a broken change**. A deliberately incorrect invoice calculation should be rejected before packaging. The expected outcome is **Broken change caught. Output blocked.**
-5. For the wider study, try the other applications or expand **More experiments & settings**. The four-method comparison runs three observations each and takes longer.
+Choose **Inventory Reservations API → Compare builds**. The default is one warm source-change observation per method: four actual pipelines including separate seeds. Open **See how the builds ran** to inspect dependency reuse, overlapping checks, the exact Dockerfiles, original/changed configuration, raw logs and observed runtime output. One pair is a preview. Choose three observations for a longer comparison.
 
-Never run two experiments on the same machine at once. A shared lock prevents overlap. Ctrl+C stops the console; if it started a build, allow it to finish the current command and clean up.
+The API change raises the reorder threshold from 20 to 25. Its built HTTP endpoint must report three low-stock products instead of two. Tests also exercise real reservations and retries. **Test a broken change** injects an incorrect available-stock calculation; required checks must reject it before packaging.
 
-### Next time you open the project
+Choose **StatusLens Dashboard** to show the already-optimized control. Its error-rate threshold changes from 2% to 1%, causing its built status data to flag two services instead of one. Both plans already use the same caching and check concurrency. The UI reports **No new optimization**, even if one set of measurements happens to be quicker. Its injected fault incorrectly requires both latency and error thresholds to be exceeded; tests must catch that.
+
+More settings select one/three observations, source change, unchanged source or cold project cache. Saved-history selection does not launch builds. Stage links open real logs; the CSV exports retained demo observations. The website has no arbitrary-app path, upload or custom-command input.
+
+Read [design, justification and faculty questions](docs/DESIGN.md), [fresh results](docs/RESULTS.md), [custom CLI instructions](custom/README.md), and the [fresh study manifest](evidence/study.json). The committed evidence is historical, labelled by platform and source commit; new builds use your own machine and may differ.
+
+## Other apps: CLI only
 
 ```powershell
-git pull
-npm.cmd run demo
+npm.cmd run custom:build -- --project "C:/path/to/your-app" --trust-project
 ```
 
-Start Docker first if running new builds. After changes to build inputs, rerun `lab:setup` and `lab:prepare` before comparing new results; this refreshes generated applications and package inputs. Keep old measurements as historical evidence. There is no need to reload sample data or repeat setup just to view saved results.
+The app must provide an explicit `pipeline-lab.json` adapter and Dockerfiles. Both included apps provide complete examples. The runner is language-independent through Docker; it does not automatically discover every app's requirements. It verifies the exact final image and retains separate custom results under `.lab/custom-evidence/`. Custom CLI results do not appear in the demo website.
 
-### Common setup problems
+## Reproduce the complete study
 
-| Problem | What to do |
-| --- | --- |
-| Repository not found / access denied | Accept the private-repo invitation and authenticate as that GitHub account. |
-| `node`, `git` or `docker` not recognized | Install the corresponding tool and reopen the terminal. |
-| `npm.ps1` is blocked | Use `npm.cmd` in PowerShell. |
-| Cannot connect to the Docker daemon | Open Docker Desktop and wait for its Linux engine. |
-| Base export must be OCI format | Enable Docker's containerd image store. If setup left an incomplete `.lab/base-oci-*` directory, stop builds and rename that specific generated directory, then rerun `lab:setup`. Do not delete the entire `.lab` folder. |
-| Port 4180 already in use | A demo may already be running; use that page, or stop its terminal before starting another. |
-| Another experiment is active | Wait for its terminal/run to finish. Do not remove an active lock. |
-| No saved results | Run `npm.cmd run lab:demo-data`, then refresh the page. |
+```powershell
+npm.cmd run study
+node scripts/export-evidence.mjs
+npm.cmd run audit
+```
+
+The study executes 34 real pipelines: cold comparisons and fault proofs for both apps, two repository-mode cache checks, and three warm observations per method for each app. It keeps every declared case and stops on unexpected failures. Export refuses an incomplete study, audits its evidence and writes new results; it does not silently pool earlier development pilots. Reproduction overwrites the exported study snapshot with your new completed study, so retain a commit/copy if you want both. It does not delete earlier local campaign directories.
 
 ## GitHub Actions
 
-The CI platform is **GitHub Actions**. The committed workflow is `.github/workflows/pipeline-lab.yml`. Pushes run optimized CI with portable BuildKit caching and fresh parallel checks. Actions → Pipeline Lab → Run workflow starts a controlled experiment; choose an application and `3` observations. The `full` suite includes contrasting workloads, four configurations, a tuned control and failure/invalidation proofs. Each completed run has a summary and downloadable raw evidence. See [the concise Actions explanation](v2/GITHUB-ACTIONS.md) for what the two jobs demonstrate and what their timers include.
+The workflow on this branch runs the coordinator tests and a real optimized build for **both apps**, restores/saves portable BuildKit layers and retains exact-image verification evidence. This is ordinary CI, distinct from the controlled before/after study. Checks rerun on every candidate. GitHub cache transport and runner setup add workflow time outside the pipeline measurement. No Jenkins or production deployment is involved.
 
-Local results and GitHub-hosted results identify their origin and are never pooled. Both execute the same coordinator; independent stages run as concurrent containers inside one Actions job so they share the same host. No Jenkins service is used.
+## Folders
 
-## What to show
+- `apps/`: both real applications, tests, exact dependency locks, Dockerfiles and adapters.
+- `engine/`: shared Docker runner, configuration validator, utilities and pinned toolchain.
+- `custom/`: generic trusted-project CLI and its guide.
+- `ui/`, `server.mjs`, `demo.mjs`: local console and its two-app allowlist.
+- `scripts/`: fresh study, CI, audit and export tools.
+- `tests/`: coordinator/adapter/control tests.
+- `docs/`, `evidence/`: new design, results and raw study evidence.
+- `.lab/`: ignored local caches, snapshots, artifacts and custom results; not old-project data.
 
-1. After loading demo data, the page opens with a saved comparison: **Before**, **After**, and **Time saved**. The selector beside The results switches between applications and experiments.
-2. Under Try it yourself, select **Invoice engine** and click **Compare builds**. This runs real pipelines, with separate builds to prepare the cache. One observation each is a preview, not a final performance estimate.
-3. Open **See how the builds ran** for stage timelines, ranges, source, Dockerfiles and raw logs. All runs, including preparation/failures, remain inspectable.
-4. Open **More experiments & settings** and select **Already optimized pipeline** to compare identical plans. Use the saved control experiment to explain timing variation.
-5. Click **Test a broken change** to inject a calculation regression into an isolated Invoice snapshot. Its original tests must catch the extra cent and block packaging. **Test without a cache**, under More experiments & settings, checks correctness without reusable project work.
-
-The other workloads are **Document publisher** (real compression/verification over a disclosed synthetic corpus) and **Release manifest validator** (small dependency-free control). Try them to explain why workloads behave differently. A dependency-upgrade scenario is available for Invoice engine only.
-
-Compare all 4 methods performs three observations each for Before, Cache only, Parallel only and After. It is substantially longer than a quick demo. Never run experiments concurrently; a shared lock prevents this. The browser and CLI use the same runner.
-
-## Evidence and claims
-
-- `v2/evidence/<experiment>/experiment.json`: complete experiment, environment, observations and status.
-- Each run retains captured source, SHA-256 manifest, actual Dockerfile, raw stage logs, result record, runtime image ID and observed output.
-- The console exports all raw observations as CSV. `npm.cmd run lab:audit` checks recorded source hashes, scheduling, invalidation and gate behavior.
-- `v2/DESIGN.md`: problem, recovered assessment context, peer comparison, baseline justification, controls, tradeoffs, limitations and official references.
-- `v2/RESULTS.md`: completed results and interpretation, generated after the experiments.
-- `v2/DEMO.md`: short faculty demonstration and answers to likely challenges.
-
-The source-first baseline is explicitly underoptimized; the tuned control and cache-only arm prevent treating it as the only comparison. BuildKit and npm cache mounts are common to all methods. We measure dependency-layer reuse and scheduling, **not Internet-download savings**. Small samples are descriptive; negative results remain visible. Release eligibility means checks passed, not production deployment. Whole GitHub-job duration includes cache transfer and setup beyond the controlled pipeline timer.
-
-## Development checks
-
-```powershell
-npm.cmd test
-npm.cmd run lab:audit
-```
-
-## What is included in the repository
-
-The source code, simplified UI, GitHub Actions workflow, pinned toolchain/lockfiles, workload generators, tests, documentation, result summaries, figures and a ~600 KB bundle of verified GitHub evidence are committed. `v2/samples/manifest.json` identifies the bundled runs and archive hash. Loading it and generating fresh applications requires no files from the original laptop.
-
-Machine-specific `.lab` caches, generated `v2/workloads`, new `v2/evidence` results, `node_modules`, private assessment attachments/chat and the old project backup are excluded. Those exclusions are intentional: setup regenerates the required inputs, and the included sample bundle supplies the shared historical demo. Original private context remains on the owner's machine; it is not needed to build or demonstrate this project.
+The pipeline creates final images under `labca-custom/<app>:<run-id>` and keeps them for inspection. Check/build containers, temporary workspace images and the owned builder are cleaned. A failed verification image may remain but is explicitly ineligible. This is a trusted local development tool, not a hostile-code upload service.

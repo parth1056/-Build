@@ -1,5 +1,0 @@
-ARG BASE_IMAGE
-FROM ${BASE_IMAGE} AS workspace
-WORKDIR /app
-COPY . ./
-RUN --mount=type=cache,target=/root/.cache/pip python -m pip install --no-index --disable-pip-version-check -r requirements.txt

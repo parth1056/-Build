@@ -1,0 +1,26 @@
+import {createServer} from 'node:http';import {spawn} from 'node:child_process';import {readFile,readdir,writeFile} from 'node:fs/promises';import {join,resolve,sep} from 'node:path';
+import {root,readJSON} from './engine/lib.mjs';import {apps,demoOptions} from './demo.mjs';
+const port=4180,live=join(root,'.lab/custom-evidence'),saved=join(root,'evidence/records');let child=null,lastError=null;
+async function campaigns(){const map=new Map();for(const [directory,isLive] of [[saved,false],[live,true]]){for(const e of await readdir(directory,{withFileTypes:true}).catch(()=>[])){try{const path=isLive?join(directory,e.name,'experiment.json'):join(directory,e.name);const x=await readJSON(path);if(!x.options?.demoApp||!Object.hasOwn(apps,x.options.demoApp))continue;map.set(x.id,x);}catch{/* incomplete journal is not a valid saved result */}}}return [...map.values()].sort((a,b)=>b.startedAt.localeCompare(a.startedAt));}
+const json=(res,value,status=200)=>{res.writeHead(status,{'content-type':'application/json','cache-control':'no-store'});res.end(JSON.stringify(value));};
+const server=createServer(async(req,res)=>{try{
+ if(!['127.0.0.1:'+port,'localhost:'+port].includes(req.headers.host))return json(res,{error:'Local host required'},403);
+ const url=new URL(req.url,'http://127.0.0.1:'+port);
+ if(req.method==='POST'){
+  if(req.headers.origin&&!['http://127.0.0.1:'+port,'http://localhost:'+port].includes(req.headers.origin))return json(res,{error:'Local requests only'},403);
+  if(url.pathname==='/api/start'){if(child)return json(res,{error:'Wait for the active build'},409);try{await readFile(join(root,'.lab/active.lock'));return json(res,{error:'Another terminal build is active'},409);}catch(e){if(e.code!=='ENOENT')throw e;}
+   let raw='';for await(const chunk of req){raw+=chunk;if(raw.length>2048)throw Error('Request too large');}const x=JSON.parse(raw);demoOptions(x);lastError=null;
+   child=spawn(process.execPath,[join(root,'scripts/run-demo.mjs'),'--app',x.app,'--scenario',x.scenario??'code-change','--repeats',String(x.repeats??1)],{cwd:root,windowsHide:true,stdio:['ignore','ignore','pipe']});
+   child.stderr.on('data',b=>lastError=b.toString().slice(-3000));child.once('error',e=>lastError=e.message);child.once('close',code=>{if(code&&!lastError)lastError='Experiment did not complete. Inspect its record.';child=null;});return json(res,{started:true},202);
+  }
+  if(url.pathname==='/api/cancel'){const current=(await campaigns()).find(x=>x.status==='running');if(child&&current)await writeFile(join(live,current.id,'cancel.request'),'Stop requested');return json(res,{requested:!!child&&!!current});}
+  return json(res,{error:'Unknown action'},404);
+ }
+ if(req.method!=='GET')return json(res,{error:'GET or POST required'},405);
+ if(url.pathname==='/api/state'){const list=await campaigns(),selected=list.find(x=>x.id===url.searchParams.get('experiment'))??list[0]??null;let locked=false;try{await readFile(join(root,'.lab/active.lock'));locked=true;}catch(e){if(e.code!=='ENOENT')throw e;}return json(res,{apps,busy:!!child||locked,canCancel:!!child,error:lastError,experiments:list.map(({id,startedAt,status,options})=>({id,startedAt,status,options})),selected});}
+ if(url.pathname==='/api/export.csv'){const list=await campaigns(),cell=x=>'"'+String(x??'').replaceAll('"','""')+'"';const rows=[['campaign','app','scenario','mode','purpose','sample','status','releaseEligible','elapsedMs','sourceHash','planHash','dependencyReused']];for(const e of list)for(const r of e.runs)rows.push([e.id,e.options.demoApp,e.options.scenario,r.mode,r.purpose,r.repetition,r.status,r.releaseEligible,r.elapsedMs,r.source.sha256,r.planHash,r.cache?.dependencyLayerReused]);res.writeHead(200,{'content-type':'text/csv','content-disposition':'attachment; filename="fresh-results.csv"'});return res.end(rows.map(r=>r.map(cell).join(',')).join('\n'));}
+ if(url.pathname.startsWith('/evidence/')){const part=decodeURIComponent(url.pathname.slice(10));if(!/^custom-[a-z0-9-]+\//.test(part))throw Error('Invalid evidence path');for(const base of [live,join(root,'evidence/raw')]){const file=resolve(base,part);if(!file.startsWith(resolve(base)+sep))throw Error('Outside evidence');try{const bytes=await readFile(file);res.writeHead(200,{'content-type':'text/plain; charset=utf-8','x-content-type-options':'nosniff'});return res.end(bytes);}catch(e){if(e.code!=='ENOENT')throw e;}}return json(res,{error:'Log is not yet available'},404);}
+ const staticFiles={'/':'index.html','/app.js':'app.js','/style.css':'style.css'};if(!Object.hasOwn(staticFiles,url.pathname))return json(res,{error:'Not found'},404);const file=staticFiles[url.pathname],bytes=await readFile(join(root,'ui',file));res.writeHead(200,{'content-type':file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.js')?'text/javascript; charset=utf-8':'text/css; charset=utf-8','cache-control':'no-store'});res.end(bytes);
+}catch(e){json(res,{error:e.message},400);}});
+server.listen(port,'127.0.0.1',()=>console.log('Fresh two-app demo: http://127.0.0.1:'+port));
+process.on('SIGINT',async()=>{if(child){const e=(await campaigns()).find(x=>x.status==='running');if(e)await writeFile(join(live,e.id,'cancel.request'),'Console shutdown');child.once('close',()=>server.close(()=>process.exit(0)));}else server.close(()=>process.exit(0));});

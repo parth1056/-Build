@@ -1,22 +1,5 @@
 {
-  "name": "pipeline-lab",
-  "version": "2.0.0",
-  "private": true,
-  "type": "module",
-  "engines": {"node": ">=22.21.0 <23"},
-  "scripts": {
-    "start": "node v2/server.mjs",
-    "demo": "node v2/server.mjs",
-    "lab:demo-data": "node v2/load-demo.mjs",
-    "custom:build": "node custom/cli.mjs",
-    "test": "node --test v2/tests/*.test.mjs",
-    "lab:setup": "node v2/setup.mjs",
-    "lab:prepare": "node v2/prepare.mjs",
-    "lab:pilot": "node v2/runner.mjs --workloads invoice --modes baseline,combined --scenario source-change --repeats 1",
-    "lab:benchmark": "node v2/runner.mjs --workloads invoice,publisher,lean --modes baseline,combined --scenario source-change --repeats 3",
-    "lab:proof": "node v2/runner.mjs --workloads invoice --modes combined --scenario failure --repeats 1",
-    "lab:audit": "node v2/audit.mjs",
-    "lab:export": "node v2/publish.mjs",
-    "ci": "node v2/github-run.mjs"
-  }
+  "name":"ci-build-time-lab","version":"3.0.0","private":true,"type":"module",
+  "engines":{"node":">=22.21.0 <27"},
+  "scripts":{"demo":"node server.mjs","test":"node --test tests/*.test.mjs","custom:build":"node custom/cli.mjs","study":"node scripts/study.mjs","audit":"node scripts/audit.mjs","ci":"node scripts/ci.mjs"}
 }

@@ -1,8 +1,0 @@
-node_modules
-dist
-.git
-.lab
-results
-review_sources
-docs
-*.log

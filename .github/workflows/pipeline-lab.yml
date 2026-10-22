@@ -1,118 +1,45 @@
-name: Pipeline Lab
+name: Two-app pipeline lab
 on:
   push:
-    branches: [main]
+    branches: [main, codex/two-app-fresh-demo]
   pull_request:
   workflow_dispatch:
-    inputs:
-      suite:
-        description: 'Experiment: pilot = before/after; full = all studies and failure proofs'
-        type: choice
-        options: [pilot, four-way, full, tuned, failure, cache-miss, dependency-change, cold, unchanged]
-        default: pilot
-      workload:
-        description: 'Example application (dependency-change needs invoice)'
-        type: choice
-        options: [invoice, publisher, lean]
-        default: invoice
-      repeats:
-        description: 'Observations per method (1 is a preview; use at least 3 for conclusions)'
-        type: choice
-        options: ['1', '3', '5']
-        default: '3'
 permissions:
   contents: read
 concurrency:
-  group: pipeline-lab-${{ github.ref }}
+  group: two-app-${{ github.ref }}
   cancel-in-progress: false
 jobs:
   ci:
-    name: Optimized CI / fresh checks / portable cache
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 25
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
         with:
           persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
         with:
-          node-version: '22.21.0'
+          node-version: '24'
           package-manager-cache: false
-      - name: Test measurement and reporting logic
+      - name: Test the coordinator and the honest-control contract
         run: npm test
-      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5 # v5.6.0
+      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5
         with:
           version: v28.0.4
           daemon-config: '{"features":{"containerd-snapshotter":true}}'
-      - name: Restore portable BuildKit layers
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      - uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9
         with:
-          path: .lab/ci-cache
-          key: buildkit-linux-amd64-v1-${{ hashFiles('v2/inputs/*lock.json', 'v2/inputs/toolchain.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          path: .lab/custom-cache
+          key: two-app-buildkit-v1-${{ runner.os }}-${{ hashFiles('engine/toolchain.json', 'apps/*/package-lock.json') }}-${{ github.sha }}-${{ github.run_id }}
           restore-keys: |
-            buildkit-linux-amd64-v1-${{ hashFiles('v2/inputs/*lock.json', 'v2/inputs/toolchain.json') }}-
-            buildkit-linux-amd64-v1-
-      - name: Pin inputs and generate example applications
-        run: |
-          node v2/setup.mjs
-          node v2/prepare.mjs
-      - name: Reuse dependencies; run independent checks together; verify the image
-        env:
-          LAB_SUITE: ci
-        run: node v2/github-run.mjs
-      - name: Retain CI evidence even when a check fails
+            two-app-buildkit-v1-${{ runner.os }}-${{ hashFiles('engine/toolchain.json', 'apps/*/package-lock.json') }}-
+      - name: Build both apps, run fresh parallel checks and verify their images
+        run: npm run ci
+      - name: Retain actual CI logs, snapshots and results
         if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
         with:
-          name: ci-evidence-${{ github.run_id }}-${{ github.run_attempt }}
-          retention-days: 14
+          name: two-app-evidence-${{ github.run_id }}
+          path: .lab/custom-evidence/
           include-hidden-files: true
-          path: |
-            v2/evidence/
-            v2/RESULTS.md
-            v2/runs.csv
-            v2/verified-evidence.json
-            v2/github-session.json
-            v2/GITHUB-SUMMARY.md
-  study:
-    name: Controlled comparison (one machine, rotating order)
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, '[study]'))
-    runs-on: ubuntu-24.04
-    timeout-minutes: 90
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
-        with:
-          node-version: '22.21.0'
-          package-manager-cache: false
-      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5 # v5.6.0
-        with:
-          version: v28.0.4
-          daemon-config: '{"features":{"containerd-snapshotter":true}}'
-      - name: Prepare identical pinned inputs (outside pipeline timing)
-        run: |
-          node v2/setup.mjs
-          node v2/prepare.mjs
-      - name: Measure the selected comparison and record every observation
-        env:
-          LAB_SUITE: ${{ inputs.suite || 'pilot' }}
-          LAB_WORKLOAD: ${{ inputs.workload || 'invoice' }}
-          LAB_REPEATS: ${{ inputs.repeats || '3' }}
-        run: node v2/github-run.mjs
-      - name: Retain sources, Dockerfiles, timings, output and raw logs
-        if: always()
-        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
-        with:
-          name: study-evidence-${{ github.run_id }}-${{ github.run_attempt }}
           retention-days: 14
-          include-hidden-files: true
-          path: |
-            v2/evidence/
-            v2/RESULTS.md
-            v2/runs.csv
-            v2/verified-evidence.json
-            v2/github-session.json
-            v2/GITHUB-SUMMARY.md
-

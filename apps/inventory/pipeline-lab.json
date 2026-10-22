@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "name": "inventory-reservations",
+  "baseImage": "node@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205",
+  "workspace": {
+    "before": "Dockerfile.before",
+    "after": "Dockerfile.after",
+    "target": "workspace"
+  },
+  "checks": [
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ]
+    },
+    {
+      "name": "types",
+      "command": [
+        "npm",
+        "run",
+        "types"
+      ]
+    },
+    {
+      "name": "tests",
+      "command": [
+        "npm",
+        "test"
+      ]
+    }
+  ],
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "output": "/app/dist"
+  },
+  "runtime": {
+    "dockerfile": "Dockerfile.runtime"
+  },
+  "verify": {
+    "command": [
+      "node",
+      "verify.mjs"
+    ],
+    "expected": {
+      "application": "inventory-reservations",
+      "reorderThreshold": 20,
+      "reorderCount": 2,
+      "reservationAccepted": true,
+      "duplicateStable": true,
+      "overReserveBlocked": true
+    },
+    "changedExpected": {
+      "application": "inventory-reservations",
+      "reorderThreshold": 25,
+      "reorderCount": 3,
+      "reservationAccepted": true,
+      "duplicateStable": true,
+      "overReserveBlocked": true
+    }
+  },
+  "change": {
+    "file": "src/config.json",
+    "from": "\"reorderThreshold\":20",
+    "to": "\"reorderThreshold\":25"
+  },
+  "failure": {
+    "file": "src/domain.ts",
+    "from": "item.onHand-item.reserved",
+    "to": "item.onHand-item.reserved+1"
+  },
+  "dependencyStep": "npm ci",
+  "exclude": [
+    "dist",
+    ".generated"
+  ],
+  "options": {
+    "beforeParallelism": 1,
+    "parallelism": 3,
+    "timeoutSeconds": 600,
+    "cpus": 1,
+    "memory": "1g",
+    "network": "none"
+  }
+}
