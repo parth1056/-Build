@@ -1,0 +1,21 @@
+
+> inventory-reservations-api@1.0.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts
+
+✔ available stock excludes reservations (0.691211ms)
+✔ reorder threshold is strict and configurable (0.190522ms)
+✔ reservation is applied once across retries (2.34684ms)
+✔ idempotency key cannot be reused for another order (0.563435ms)
+✔ overselling is blocked without mutation (0.193959ms)
+✔ bad quantities, unknown fields and absent SKUs rejected (1.24512ms)
+✔ caller mutation cannot alter stored stock (0.150405ms)
+✔ API serves health, stock and configurable reorder list (24.203636ms)
+✔ API uses status codes for invalid, absent and excessive reservations (5.372505ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 846.862252

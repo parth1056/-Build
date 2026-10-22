@@ -1,0 +1,41 @@
+#0 building with "labca-custom-b-e773a34e-60d" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile.runtime
+#1 transferring dockerfile: 194B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [context labbase] load metadata for docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [context labbase] OCI load from client
+#4 resolve docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205 done
+#4 DONE 0.0s
+
+#5 [1/3] WORKDIR /app
+#5 CACHED
+
+#6 [internal] load build context
+#6 transferring context: 224.77kB done
+#6 DONE 0.0s
+
+#7 [2/3] COPY --chown=node:node . ./
+#7 DONE 0.0s
+
+#8 exporting to oci image format
+#8 exporting layers 0.0s done
+#8 exporting manifest sha256:7683c87d9e051828d14f9b95f4f61f46423fe97027c1a8a0fd696cf5626717ff done
+#8 exporting config sha256:48d2c114f43c66fafc170f8ab51cbc5ca7442f1c47233c8e2e26fc8f0963093b done
+#8 sending tarball
+#8 sending tarball 1.3s done
+#8 DONE 1.3s
+
+#9 importing to docker
+#9 DONE 0.0s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)

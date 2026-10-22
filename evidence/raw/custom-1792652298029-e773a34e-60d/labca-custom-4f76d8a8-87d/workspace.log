@@ -1,0 +1,89 @@
+#0 building with "labca-custom-b-e773a34e-60d" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile.after
+#1 transferring dockerfile: 223B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [context labbase] load metadata for docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 89B done
+#3 DONE 0.0s
+
+#4 [internal] load build context
+#4 transferring context: 101.78kB 0.0s done
+#4 DONE 0.0s
+
+#5 [context labbase] OCI load from client
+#5 resolve docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205 done
+#5 sha256:6d793208473aa7d9ccc02b9de99aee40e4d6e73065d5307d076fad3ba554d580 450B / 450B done
+#5 sha256:47e82ed2c7200e6bb57827745085027ba425376a5ed4ba4a8e295a4e3b5d1b40 3.31kB / 3.31kB done
+#5 sha256:f2b8e65232e105b573ea2f37c4a2ec56bcf0b63687ae2bbe329cf4252f30bc1d 1.71MB / 1.71MB 0.0s done
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 7.34MB / 51.08MB 0.2s
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 16.78MB / 51.08MB 0.3s
+#5 sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 7.34MB / 28.25MB 0.2s
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 24.12MB / 51.08MB 0.5s
+#5 sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 16.78MB / 28.25MB 0.3s
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 46.14MB / 51.08MB 0.6s
+#5 sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 24.12MB / 28.25MB 0.5s
+#5 sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 28.25MB / 28.25MB 0.6s
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 51.08MB / 51.08MB 0.8s
+#5 sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 51.08MB / 51.08MB 1.0s done
+#5 sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 28.25MB / 28.25MB 1.0s done
+#5 extracting sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26
+#5 extracting sha256:11422d7ca1a44390a32bd8d8d9dc5946b4d053b3bbd9507d682e35584ba84a26 0.6s done
+#5 DONE 1.6s
+
+#5 [context labbase] OCI load from client
+#5 extracting sha256:47e82ed2c7200e6bb57827745085027ba425376a5ed4ba4a8e295a4e3b5d1b40 done
+#5 extracting sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7
+#5 extracting sha256:c0e48fd1aa256850e18f180365b8fa3e55ae2197e85461fd3392cfb5c4c8e5e7 0.9s done
+#5 DONE 2.5s
+
+#5 [context labbase] OCI load from client
+#5 extracting sha256:f2b8e65232e105b573ea2f37c4a2ec56bcf0b63687ae2bbe329cf4252f30bc1d 0.0s done
+#5 extracting sha256:6d793208473aa7d9ccc02b9de99aee40e4d6e73065d5307d076fad3ba554d580 done
+#5 DONE 2.5s
+
+#6 [workspace 1/5] WORKDIR /app
+#6 DONE 1.9s
+
+#7 [workspace 2/5] COPY package.json package-lock.json ./
+#7 DONE 0.0s
+
+#8 [workspace 3/5] RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+#8 2.491 
+#8 2.491 added 122 packages in 2s
+#8 2.492 npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+#8 2.492 npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+#8 2.492 npm warn install-scripts
+#8 2.492 npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+#8 2.494 npm notice
+#8 2.494 npm notice New major version of npm available! 11.19.1 -> 12.2.1
+#8 2.494 npm notice Changelog: https://github.com/npm/cli/releases/tag/v12.2.1
+#8 2.494 npm notice To update run: npm install -g npm@12.2.1
+#8 2.494 npm notice
+#8 DONE 3.9s
+
+#9 [workspace 4/5] COPY . ./
+#9 DONE 0.0s
+
+#10 exporting to oci image format
+#10 exporting layers
+#10 exporting layers 4.2s done
+#10 exporting manifest sha256:2d3c6b8e71e561dfdbeb72c74e937829d8da972385c3e83af7d49c67a38325cc done
+#10 exporting config sha256:1f39462c939b28cfd6d7e22a08823c888d05d8c03635518331beb0d459824082 done
+#10 sending tarball
+#10 ...
+
+#11 importing to docker
+#11 DONE 0.0s
+
+#10 exporting to oci image format
+#10 sending tarball 2.8s done
+#10 DONE 7.1s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)

@@ -1,0 +1,18 @@
+
+> statuslens-dashboard@1.0.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts tests/*.test.tsx
+
+✔ dashboard renders supplied classifications and thresholds (31.703044ms)
+✔ healthy service remains operational (4.415147ms)
+✔ latency or errors independently cause degradation (0.618328ms)
+✔ exact threshold is not exceeded (0.370297ms)
+✔ changing configuration changes real classifications (0.422751ms)
+✔ invalid observations, limits and duplicate names rejected (2.160189ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1570.720022

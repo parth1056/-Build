@@ -1,0 +1,3539 @@
+{
+  "schema": 1,
+  "id": "custom-1792652298029-e773a34e-60d",
+  "name": "statuslens",
+  "status": "completed",
+  "startedAt": "2026-10-22T06:58:18.029Z",
+  "options": {
+    "project": "/home/runner/work/-Build/-Build/apps/dashboard",
+    "config": "pipeline-lab.json",
+    "mode": "compare",
+    "scenario": "code-change",
+    "repeats": 3,
+    "trust": true,
+    "demoApp": "dashboard"
+  },
+  "config": {
+    "schema": 1,
+    "name": "statuslens",
+    "baseImage": "node@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205",
+    "workspace": {
+      "before": "Dockerfile.after",
+      "after": "Dockerfile.after",
+      "target": "workspace"
+    },
+    "checks": [
+      {
+        "name": "lint",
+        "command": [
+          "npm",
+          "run",
+          "lint"
+        ]
+      },
+      {
+        "name": "types",
+        "command": [
+          "npm",
+          "run",
+          "types"
+        ]
+      },
+      {
+        "name": "tests",
+        "command": [
+          "npm",
+          "test"
+        ]
+      }
+    ],
+    "build": {
+      "command": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "output": "/app/dist"
+    },
+    "runtime": {
+      "dockerfile": "Dockerfile.runtime"
+    },
+    "verify": {
+      "command": [
+        "node",
+        "verify.mjs"
+      ],
+      "expected": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "changedExpected": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      }
+    },
+    "change": {
+      "file": "src/config.json",
+      "from": "\"errorRateLimit\":0.02",
+      "to": "\"errorRateLimit\":0.01"
+    },
+    "failure": {
+      "file": "src/status.ts",
+      "from": "x.latencyMs>config.latencyLimitMs||x.errorRate>config.errorRateLimit",
+      "to": "x.latencyMs>config.latencyLimitMs&&x.errorRate>config.errorRateLimit"
+    },
+    "dependencyStep": "npm ci",
+    "exclude": [
+      "dist",
+      ".generated"
+    ],
+    "options": {
+      "beforeParallelism": 3,
+      "parallelism": 3,
+      "timeoutSeconds": 600,
+      "cpus": 1,
+      "memory": "1g",
+      "network": "none"
+    },
+    "runtimeBaseImage": "node@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205"
+  },
+  "runs": [
+    {
+      "id": "labca-custom-0ce355f1-329",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 1,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.027598999993642792,
+          "durationMs": 15324.822570999997
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15325.926619000005,
+          "durationMs": 3929.920604999992
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15325.952414,
+          "durationMs": 5074.048103999987
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15325.957756999996,
+          "durationMs": 3548.7454380000127
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20400.594867000007,
+          "durationMs": 915.4896920000028
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21316.67158299999,
+          "durationMs": 1492.1003990000172
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 22837.731518999994,
+          "durationMs": 304.70209000000614
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:58:19.280Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:7683c87d9e051828d14f9b95f4f61f46423fe97027c1a8a0fd696cf5626717ff",
+      "imageTag": "labca-custom/statuslens:labca-custom-0ce355f1-329",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23142.918523,
+      "finishedAt": "2026-10-22T06:58:42.424Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-99a6bfd2-753",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 1,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.013991000014357269,
+          "durationMs": 3012.6098679999996
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 3013.213168999995,
+          "durationMs": 3446.5732920000155
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 3013.2292339999985,
+          "durationMs": 5125.551157000009
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 3013.232343999989,
+          "durationMs": 3790.673806000006
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 8139.559948000009,
+          "durationMs": 924.2372359999863
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 9064.29041300001,
+          "durationMs": 1459.6838029999926
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10547.722372999997,
+          "durationMs": 320.64803300000494
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:58:43.400Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:ea4c1074e7043e52d56c9d1c9ca10602384ebaa0dfe17f17f90a134fe0aa4227",
+      "imageTag": "labca-custom/statuslens:labca-custom-99a6bfd2-753",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 10868.915508000006,
+      "finishedAt": "2026-10-22T06:58:54.270Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-0869d611-713",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 1,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.013956999988295138,
+          "durationMs": 15718.569487
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15719.312771999976,
+          "durationMs": 3919.964986999985
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15719.325315999973,
+          "durationMs": 4900.8937739999965
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15719.328811999992,
+          "durationMs": 3471.8141169999726
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20623.165139999997,
+          "durationMs": 920.9686740000034
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21544.730801999976,
+          "durationMs": 1471.7291969999787
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 23045.805261,
+          "durationMs": 311.24599500000477
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:58:56.950Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:55cd61ebc4238d120335a9f54386565cf5006d70c29f195d27fdb4a8875c36f7",
+      "imageTag": "labca-custom/statuslens:labca-custom-0869d611-713",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23357.62719500001,
+      "finishedAt": "2026-10-22T06:59:20.308Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-2ee345a3-5b2",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 1,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.015513000020291656,
+          "durationMs": 2919.706857000012
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 2920.4205750000547,
+          "durationMs": 4040.982479999948
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 2920.4307160000317,
+          "durationMs": 4860.754200000025
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 2920.441339000012,
+          "durationMs": 3308.5157960000215
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 7781.895600000047,
+          "durationMs": 930.8525449999725
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 8713.992610000016,
+          "durationMs": 1479.1621879999875
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10220.798396000057,
+          "durationMs": 301.96775199996773
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:59:21.220Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:70b422bb980b1a877d9b1eaea0a045ab90b0cec8495d0be2689e7cd374ea3ca1",
+      "imageTag": "labca-custom/statuslens:labca-custom-2ee345a3-5b2",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 10523.633073000005,
+      "finishedAt": "2026-10-22T06:59:31.745Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-4f76d8a8-87d",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 2,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.01584599999478087,
+          "durationMs": 15557.571547000029
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15558.75967400003,
+          "durationMs": 3988.5699310000055
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15558.770609,
+          "durationMs": 5071.254711000016
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15558.774032999994,
+          "durationMs": 3648.977600000042
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20630.99719700002,
+          "durationMs": 903.643385000003
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21535.26040900004,
+          "durationMs": 1466.8082120000036
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 23027.393704999995,
+          "durationMs": 294.6268980000168
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:59:35.010Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:bf9b9b5e92f8e41852abac42ff8c6981675b939ba7ea057ef0774ed929da0b3f",
+      "imageTag": "labca-custom/statuslens:labca-custom-4f76d8a8-87d",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23322.66114000004,
+      "finishedAt": "2026-10-22T06:59:58.334Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-042eae05-8b7",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 2,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.017233000020496547,
+          "durationMs": 2932.876227999979
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 2933.5977490000078,
+          "durationMs": 3743.9082620000117
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 2933.607798000041,
+          "durationMs": 5253.820507999975
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 2933.610904000001,
+          "durationMs": 3715.6349490000284
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 8188.175652000005,
+          "durationMs": 955.3236650000326
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 9146.688678000006,
+          "durationMs": 1483.2131640000152
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10653.163058000035,
+          "durationMs": 306.4294200000004
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T06:59:59.248Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:7e8cc244e5b319143fedeeb16ee588eec54bcfb3e937f6ca9a302e013d7501fe",
+      "imageTag": "labca-custom/statuslens:labca-custom-042eae05-8b7",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 10960.569163999986,
+      "finishedAt": "2026-10-22T07:00:10.210Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-bc76a01c-874",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 2,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.017038999998476356,
+          "durationMs": 15521.005632999993
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15522.29028299998,
+          "durationMs": 3914.988873000024
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15522.300120999978,
+          "durationMs": 5271.046104000008
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15522.303518,
+          "durationMs": 3925.9295510000084
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20794.150487000006,
+          "durationMs": 976.8791670000064
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21772.093881000008,
+          "durationMs": 1493.2327550000045
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 23289.789894999994,
+          "durationMs": 296.5260320000234
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:00:13.095Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:c5aa683ecef3f959d44f07e1321ed74ad868d493b3943d3044554b4e2fd02d87",
+      "imageTag": "labca-custom/statuslens:labca-custom-bc76a01c-874",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23587.056996,
+      "finishedAt": "2026-10-22T07:00:36.683Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-9481b72b-ece",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 2,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.015545999980531633,
+          "durationMs": 3000.9222300000256
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 3004.4469490000047,
+          "durationMs": 3812.9826940000057
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 3004.457055000006,
+          "durationMs": 5180.105877999973
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 3004.460238999978,
+          "durationMs": 3459.908075000043
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 8185.455062000023,
+          "durationMs": 901.6429909999715
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 9088.169991999981,
+          "durationMs": 1511.2171740000485
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10624.554537000018,
+          "durationMs": 282.10432400001446
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:00:37.680Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:7f3cb0d0da5bc4f9b4c03bf4a27f801d420369dfd843eae58ae86894fdf56f0b",
+      "imageTag": "labca-custom/statuslens:labca-custom-9481b72b-ece",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 10907.416627999977,
+      "finishedAt": "2026-10-22T07:00:48.588Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-b0804a81-352",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 3,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.015391999972052872,
+          "durationMs": 15426.780818000028
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15427.687809000025,
+          "durationMs": 3844.909649999987
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15427.697941999999,
+          "durationMs": 5194.410627999983
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15427.701179999975,
+          "durationMs": 3427.862797000038
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20623.061843000003,
+          "durationMs": 993.7030289999675
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21617.646713999973,
+          "durationMs": 1502.9898240000475
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 23147.035938000015,
+          "durationMs": 295.7259619999677
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:00:51.437Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:4c4c6e5b2cd27b0741565bbb975e1c088dbb46bc265749b5ff5355e372295f53",
+      "imageTag": "labca-custom/statuslens:labca-custom-b0804a81-352",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23443.522335999995,
+      "finishedAt": "2026-10-22T07:01:14.881Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-bba703ac-df9",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 3,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.016310000035446137,
+          "durationMs": 3007.463527999993
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 3008.3651309999987,
+          "durationMs": 4009.051356000011
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 3008.3753310000175,
+          "durationMs": 5067.74291500001
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 3008.3784250000026,
+          "durationMs": 3273.119826000009
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 8077.155505000032,
+          "durationMs": 971.5306160000036
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 9054.711668000033,
+          "durationMs": 1510.68258600001
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10591.681816000026,
+          "durationMs": 301.8750359999831
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:01:15.823Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:f990c8867e65e6e6b941a4667e77e0a4dd86d4bc04160fe96ff074d15fff97f9",
+      "imageTag": "labca-custom/statuslens:labca-custom-bba703ac-df9",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 10894.657506000018,
+      "finishedAt": "2026-10-22T07:01:26.719Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-fd33d77b-8da",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation",
+      "repetition": 3,
+      "status": "passed",
+      "source": {
+        "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.01732300000730902,
+          "durationMs": 15529.204895000032
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 15532.331925000006,
+          "durationMs": 3681.3509020000347
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 15532.347449000052,
+          "durationMs": 5240.436556999979
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 15532.352343000006,
+          "durationMs": 3289.0838890000014
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 20773.64349700004,
+          "durationMs": 958.4044429999776
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 21732.914211000025,
+          "durationMs": 1557.6468960000202
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 23314.673384000023,
+          "durationMs": 304.5623720000149
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:01:29.499Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": false,
+        "cachedLogLines": []
+      },
+      "artifacts": {
+        "sha256": "1bc2f7d2def93e3097bf3202b4183859f429589ac3681560a2ffa3281eca12a9",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "bbf4dd006c410aa753202db3a5f0c19952145c9c0b570a5403c06def50e987bd"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:51e7e36903bc60ccb1f49ac2a7be027f8c3a5260a19e7789f49731dfaf0c956b",
+      "imageTag": "labca-custom/statuslens:labca-custom-fd33d77b-8da",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 1,
+        "errorRateLimit": 0.02,
+        "assetsServed": true
+      },
+      "elapsedMs": 23620.05278300005,
+      "finishedAt": "2026-10-22T07:01:53.120Z",
+      "expected": "passed",
+      "expectationMet": true
+    },
+    {
+      "id": "labca-custom-5faf1365-66f",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement",
+      "repetition": 3,
+      "status": "passed",
+      "source": {
+        "sha256": "331cdec363620aaf79838c92ded215d1a76f44562d970dcdc884b4d00d8d5c44",
+        "files": [
+          {
+            "path": ".dockerignore",
+            "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+          },
+          {
+            "path": "Dockerfile.after",
+            "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+          },
+          {
+            "path": "Dockerfile.runtime",
+            "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+          },
+          {
+            "path": "eslint.config.mjs",
+            "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+          },
+          {
+            "path": "index.html",
+            "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+          },
+          {
+            "path": "package-lock.json",
+            "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+          },
+          {
+            "path": "package.json",
+            "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+          },
+          {
+            "path": "pipeline-lab.json",
+            "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+          },
+          {
+            "path": "scripts/build.mjs",
+            "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+          },
+          {
+            "path": "scripts/server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "scripts/verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          },
+          {
+            "path": "src/App.tsx",
+            "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+          },
+          {
+            "path": "src/config.json",
+            "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+          },
+          {
+            "path": "src/main.tsx",
+            "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+          },
+          {
+            "path": "src/services.json",
+            "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+          },
+          {
+            "path": "src/status.ts",
+            "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+          },
+          {
+            "path": "src/style.css",
+            "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+          },
+          {
+            "path": "src/vite-env.d.ts",
+            "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+          },
+          {
+            "path": "tests/render.test.tsx",
+            "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+          },
+          {
+            "path": "tests/status.test.ts",
+            "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+          },
+          {
+            "path": "tsconfig.json",
+            "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+          }
+        ]
+      },
+      "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+      "parallelism": 3,
+      "stages": [
+        {
+          "name": "workspace",
+          "status": "passed",
+          "startMs": 0.023639999970328063,
+          "durationMs": 3066.612147000036
+        },
+        {
+          "name": "lint",
+          "status": "passed",
+          "startMs": 3067.721974999993,
+          "durationMs": 3651.761254000012
+        },
+        {
+          "name": "types",
+          "status": "passed",
+          "startMs": 3067.732916000008,
+          "durationMs": 5242.936359999992
+        },
+        {
+          "name": "tests",
+          "status": "passed",
+          "startMs": 3067.7362389999907,
+          "durationMs": 3239.1823490000097
+        },
+        {
+          "name": "build",
+          "status": "passed",
+          "startMs": 8311.632018000004,
+          "durationMs": 924.5522819999605
+        },
+        {
+          "name": "package",
+          "status": "passed",
+          "startMs": 9237.304300999967,
+          "durationMs": 1444.8737369999872
+        },
+        {
+          "name": "verify",
+          "status": "passed",
+          "startMs": 10708.276358000003,
+          "durationMs": 304.67715599999065
+        }
+      ],
+      "releaseEligible": true,
+      "startedAt": "2026-10-22T07:01:54.198Z",
+      "externalCache": {
+        "enabled": false,
+        "available": false
+      },
+      "cache": {
+        "declaredDependencyStep": "npm ci",
+        "dependencyLayerReused": true,
+        "cachedLogLines": [
+          "#6 CACHED",
+          "#7 CACHED",
+          "#8 CACHED"
+        ]
+      },
+      "artifacts": {
+        "sha256": "22e4f5372ccbccdac6103675ddcd3094e9a7811a5ee2085b97cb81216eb4cadd",
+        "files": [
+          {
+            "path": "assets/index-CPImMlLs.js",
+            "sha256": "92b16f632cb4b5ba5794cd8000672e3d76001bd98c9376181cd284f1b99f30f3"
+          },
+          {
+            "path": "assets/index-D6GF8ZIE.css",
+            "sha256": "21771538dc482efe1ccde30f0d763438d326376dec17e4129c8c78efa96cc0c8"
+          },
+          {
+            "path": "index.html",
+            "sha256": "625aed5f97c022c269821bb8353ed4ec0f22fbc04cb59b37fbc3eaab7894ffc0"
+          },
+          {
+            "path": "server.mjs",
+            "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+          },
+          {
+            "path": "summary.json",
+            "sha256": "961c99cc5d04ddf9768e56ff55f4dad661297ea70efabd08d3b68a1fe30aea7b"
+          },
+          {
+            "path": "verify.mjs",
+            "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+          }
+        ]
+      },
+      "imageId": "sha256:8df5b47bb4dd7e9f4cae489c61a1695a42868fe05559609cb3ac0188e53f8d2a",
+      "imageTag": "labca-custom/statuslens:labca-custom-5faf1365-66f",
+      "output": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "expectedOutput": {
+        "application": "statuslens",
+        "serviceCount": 4,
+        "degradedCount": 2,
+        "errorRateLimit": 0.01,
+        "assetsServed": true
+      },
+      "elapsedMs": 11013.872604999982,
+      "finishedAt": "2026-10-22T07:02:05.214Z",
+      "expected": "passed",
+      "expectationMet": true
+    }
+  ],
+  "events": [
+    {
+      "type": "preparation",
+      "at": "2026-10-22T06:58:19.006Z",
+      "mode": "before",
+      "repetition": 1,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:58:19.281Z",
+      "run": "labca-custom-0ce355f1-329",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:19.282Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:34.608Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:34.611Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:34.616Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:39.682Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:40.598Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:42.120Z",
+      "run": "labca-custom-0ce355f1-329",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T06:58:42.425Z",
+      "run": "labca-custom-0ce355f1-329",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.14",
+      "image": "labca-custom/statuslens:labca-custom-0ce355f1-329"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:58:43.401Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:43.401Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:46.414Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:46.417Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:46.424Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:51.541Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:52.465Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:53.949Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T06:58:54.270Z",
+      "run": "labca-custom-99a6bfd2-753",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "10.87",
+      "image": "labca-custom/statuslens:labca-custom-99a6bfd2-753"
+    },
+    {
+      "type": "preparation",
+      "at": "2026-10-22T06:58:55.103Z",
+      "mode": "after",
+      "repetition": 1,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:58:56.951Z",
+      "run": "labca-custom-0869d611-713",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:58:56.951Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:12.671Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:12.675Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:12.681Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:17.577Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:18.496Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:19.997Z",
+      "run": "labca-custom-0869d611-713",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T06:59:20.310Z",
+      "run": "labca-custom-0869d611-713",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.36",
+      "image": "labca-custom/statuslens:labca-custom-0869d611-713"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:59:21.221Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:21.222Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:24.142Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:24.145Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:24.149Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:29.004Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:29.936Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:31.443Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T06:59:31.746Z",
+      "run": "labca-custom-2ee345a3-5b2",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "10.52",
+      "image": "labca-custom/statuslens:labca-custom-2ee345a3-5b2"
+    },
+    {
+      "type": "preparation",
+      "at": "2026-10-22T06:59:32.704Z",
+      "mode": "after",
+      "repetition": 2,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:59:35.011Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:35.012Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:50.571Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:50.574Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:50.579Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:55.643Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:56.548Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:58.040Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T06:59:58.335Z",
+      "run": "labca-custom-4f76d8a8-87d",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.32",
+      "image": "labca-custom/statuslens:labca-custom-4f76d8a8-87d"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T06:59:59.250Z",
+      "run": "labca-custom-042eae05-8b7",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T06:59:59.250Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:02.184Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:02.188Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:02.194Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:07.438Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:08.397Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:09.904Z",
+      "run": "labca-custom-042eae05-8b7",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:00:10.211Z",
+      "run": "labca-custom-042eae05-8b7",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "10.96",
+      "image": "labca-custom/statuslens:labca-custom-042eae05-8b7"
+    },
+    {
+      "type": "preparation",
+      "at": "2026-10-22T07:00:11.108Z",
+      "mode": "before",
+      "repetition": 2,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:00:13.096Z",
+      "run": "labca-custom-bc76a01c-874",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:13.097Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:28.619Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:28.622Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:28.629Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:33.890Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:34.868Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:36.386Z",
+      "run": "labca-custom-bc76a01c-874",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:00:36.684Z",
+      "run": "labca-custom-bc76a01c-874",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.59",
+      "image": "labca-custom/statuslens:labca-custom-bc76a01c-874"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:00:37.681Z",
+      "run": "labca-custom-9481b72b-ece",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:37.682Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:40.686Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:40.689Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:40.695Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:45.868Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:46.770Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:48.306Z",
+      "run": "labca-custom-9481b72b-ece",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:00:48.594Z",
+      "run": "labca-custom-9481b72b-ece",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "10.91",
+      "image": "labca-custom/statuslens:labca-custom-9481b72b-ece"
+    },
+    {
+      "type": "preparation",
+      "at": "2026-10-22T07:00:49.547Z",
+      "mode": "before",
+      "repetition": 3,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:00:51.438Z",
+      "run": "labca-custom-b0804a81-352",
+      "mode": "before",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:00:51.439Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:06.866Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:06.870Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:06.877Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:12.062Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:13.056Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:14.586Z",
+      "run": "labca-custom-b0804a81-352",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:01:14.882Z",
+      "run": "labca-custom-b0804a81-352",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.44",
+      "image": "labca-custom/statuslens:labca-custom-b0804a81-352"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:01:15.824Z",
+      "run": "labca-custom-bba703ac-df9",
+      "mode": "before",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:15.827Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:18.833Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:18.838Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:18.843Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:23.902Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:24.882Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:26.419Z",
+      "run": "labca-custom-bba703ac-df9",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:01:26.720Z",
+      "run": "labca-custom-bba703ac-df9",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "10.89",
+      "image": "labca-custom/statuslens:labca-custom-bba703ac-df9"
+    },
+    {
+      "type": "preparation",
+      "at": "2026-10-22T07:01:27.660Z",
+      "mode": "after",
+      "repetition": 3,
+      "note": "Builder-local cache reset and pinned base preload are outside timing. Only repository mode imports the saved portable cache."
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:01:29.500Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "mode": "after",
+      "scenario": "seed",
+      "purpose": "preparation"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:29.501Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:45.034Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:45.039Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:45.044Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:50.274Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:51.234Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:52.816Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:01:53.121Z",
+      "run": "labca-custom-fd33d77b-8da",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "23.62",
+      "image": "labca-custom/statuslens:labca-custom-fd33d77b-8da"
+    },
+    {
+      "type": "run-start",
+      "at": "2026-10-22T07:01:54.200Z",
+      "run": "labca-custom-5faf1365-66f",
+      "mode": "after",
+      "scenario": "code-change",
+      "purpose": "measurement"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:54.201Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "workspace"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:57.269Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "lint"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:57.272Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "types"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:01:57.280Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "tests"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:02:02.513Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "build"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:02:03.438Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "package"
+    },
+    {
+      "type": "stage-start",
+      "at": "2026-10-22T07:02:04.910Z",
+      "run": "labca-custom-5faf1365-66f",
+      "name": "verify"
+    },
+    {
+      "type": "run-end",
+      "at": "2026-10-22T07:02:05.215Z",
+      "run": "labca-custom-5faf1365-66f",
+      "status": "passed",
+      "expected": "passed",
+      "expectationMet": true,
+      "seconds": "11.01",
+      "image": "labca-custom/statuslens:labca-custom-5faf1365-66f"
+    }
+  ],
+  "environment": {
+    "docker": {
+      "Client": {
+        "Version": "28.0.4",
+        "ApiVersion": "1.48",
+        "DefaultAPIVersion": "1.48",
+        "GitCommit": "b8034c0",
+        "GoVersion": "go1.23.7",
+        "Os": "linux",
+        "Arch": "amd64",
+        "BuildTime": "Tue Mar 25 15:06:08 2025",
+        "Context": "setup-docker-action"
+      },
+      "Server": {
+        "Platform": {
+          "Name": "Docker Engine - Community"
+        },
+        "Components": [
+          {
+            "Name": "Engine",
+            "Version": "28.0.4",
+            "Details": {
+              "ApiVersion": "1.48",
+              "Arch": "amd64",
+              "BuildTime": "Tue Mar 25 15:07:23 2025",
+              "Experimental": "false",
+              "GitCommit": "6430e49",
+              "GoVersion": "go1.23.7",
+              "KernelVersion": "7.0.0-1017-azure",
+              "MinAPIVersion": "1.24",
+              "Os": "linux"
+            }
+          },
+          {
+            "Name": "containerd",
+            "Version": "v2.4.2",
+            "Details": {
+              "GitCommit": "b7a25261e029d68978bbf290df0a62fc819b3c51"
+            }
+          },
+          {
+            "Name": "runc",
+            "Version": "1.2.6",
+            "Details": {
+              "GitCommit": "v1.2.6-0-ge89a299"
+            }
+          },
+          {
+            "Name": "docker-init",
+            "Version": "0.19.0",
+            "Details": {
+              "GitCommit": "de40ad0"
+            }
+          }
+        ],
+        "Version": "28.0.4",
+        "ApiVersion": "1.48",
+        "MinAPIVersion": "1.24",
+        "GitCommit": "6430e49",
+        "GoVersion": "go1.23.7",
+        "Os": "linux",
+        "Arch": "amd64",
+        "KernelVersion": "7.0.0-1017-azure",
+        "BuildTime": "2025-03-25T15:07:23.000000000+00:00"
+      }
+    },
+    "buildx": "github.com/docker/buildx v0.38.0 0dbe87f36ed472fe36b6796c3f70b4210a731fc5",
+    "node": "v24.22.0",
+    "host": {
+      "cpus": 2,
+      "memory": 8316899328,
+      "os": "Ubuntu 24.04.5 LTS"
+    },
+    "builderImage": "moby/buildkit@sha256:cec9f139f45e93c5c69c60f8b07cfad9f43f4ef6b6a6cd917527fea5ff2e3dea",
+    "limits": {
+      "builderCPU": 4,
+      "builderMemory": "3g",
+      "beforeParallelism": 3,
+      "parallelism": 3,
+      "timeoutSeconds": 600,
+      "cpus": 1,
+      "memory": "1g",
+      "network": "none"
+    },
+    "timing": "Workspace build through exact-image JSON verification; excludes source staging, base preparation, seed builds and cleanup. Repository mode includes BuildKit cache import/export within workspace build."
+  },
+  "execution": {
+    "platform": "GitHub Actions",
+    "commit": "75d1d0350dcd639242ef9b5f1eefce730ca38c81",
+    "url": "https://github.com/parth1056/-Build/actions/runs/39736698836"
+  },
+  "sourceCopy": {
+    "files": 21,
+    "bytes": 100721
+  },
+  "originalSource": {
+    "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+    "files": [
+      {
+        "path": ".dockerignore",
+        "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+      },
+      {
+        "path": "Dockerfile.after",
+        "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+      },
+      {
+        "path": "Dockerfile.runtime",
+        "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+      },
+      {
+        "path": "eslint.config.mjs",
+        "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+      },
+      {
+        "path": "index.html",
+        "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+      },
+      {
+        "path": "package.json",
+        "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+      },
+      {
+        "path": "pipeline-lab.json",
+        "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+      },
+      {
+        "path": "scripts/build.mjs",
+        "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+      },
+      {
+        "path": "scripts/server.mjs",
+        "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+      },
+      {
+        "path": "scripts/verify.mjs",
+        "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+      },
+      {
+        "path": "src/App.tsx",
+        "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+      },
+      {
+        "path": "src/config.json",
+        "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+      },
+      {
+        "path": "src/main.tsx",
+        "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+      },
+      {
+        "path": "src/services.json",
+        "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+      },
+      {
+        "path": "src/status.ts",
+        "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+      },
+      {
+        "path": "src/style.css",
+        "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+      },
+      {
+        "path": "src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "tests/render.test.tsx",
+        "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+      },
+      {
+        "path": "tests/status.test.ts",
+        "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+      }
+    ]
+  },
+  "finishedAt": "2026-10-22T07:02:07.962Z",
+  "summary": {
+    "methods": [
+      {
+        "mode": "before",
+        "n": 3,
+        "medianMs": 10894.657506000018,
+        "minMs": 10868.915508000006,
+        "maxMs": 10907.416627999977
+      },
+      {
+        "mode": "after",
+        "n": 3,
+        "medianMs": 10960.569163999986,
+        "minMs": 10523.633073000005,
+        "maxMs": 11013.872604999982
+      }
+    ],
+    "sourceMatched": true,
+    "comparable": false,
+    "reductionPercent": null,
+    "note": "Effective plans identical; no attributed optimization."
+  }
+}

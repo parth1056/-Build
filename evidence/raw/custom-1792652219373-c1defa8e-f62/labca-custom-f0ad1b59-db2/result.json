@@ -1,0 +1,146 @@
+{
+  "id": "labca-custom-f0ad1b59-db2",
+  "mode": "after",
+  "scenario": "failure",
+  "purpose": "proof",
+  "repetition": 1,
+  "status": "failed",
+  "source": {
+    "sha256": "266768995d118f03869be4d3650870c42d705c4282683f48b6b7ba371a20adc6",
+    "files": [
+      {
+        "path": ".dockerignore",
+        "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+      },
+      {
+        "path": "Dockerfile.after",
+        "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+      },
+      {
+        "path": "Dockerfile.runtime",
+        "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+      },
+      {
+        "path": "eslint.config.mjs",
+        "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+      },
+      {
+        "path": "index.html",
+        "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+      },
+      {
+        "path": "package.json",
+        "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+      },
+      {
+        "path": "pipeline-lab.json",
+        "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+      },
+      {
+        "path": "scripts/build.mjs",
+        "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+      },
+      {
+        "path": "scripts/server.mjs",
+        "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+      },
+      {
+        "path": "scripts/verify.mjs",
+        "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+      },
+      {
+        "path": "src/App.tsx",
+        "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+      },
+      {
+        "path": "src/config.json",
+        "sha256": "05dad38162a7736386dbf616a6a25e526c0f4199e98b58dec00816d55a5d236b"
+      },
+      {
+        "path": "src/main.tsx",
+        "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+      },
+      {
+        "path": "src/services.json",
+        "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+      },
+      {
+        "path": "src/status.ts",
+        "sha256": "bcc3ab0532323f6c18840704e102fd36d3b831e73cbd5acd32067e53fcaf1df4"
+      },
+      {
+        "path": "src/style.css",
+        "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+      },
+      {
+        "path": "src/vite-env.d.ts",
+        "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+      },
+      {
+        "path": "tests/render.test.tsx",
+        "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+      },
+      {
+        "path": "tests/status.test.ts",
+        "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+      }
+    ]
+  },
+  "planHash": "318630b39149987ef282cf2d953d8b4136d2f7cf0732141e90c7d59151d2e5e0",
+  "parallelism": 3,
+  "stages": [
+    {
+      "name": "workspace",
+      "status": "passed",
+      "startMs": 0.02357799999299459,
+      "durationMs": 3020.144800000009
+    },
+    {
+      "name": "lint",
+      "status": "passed",
+      "startMs": 3020.7552469999937,
+      "durationMs": 3795.0592729999917
+    },
+    {
+      "name": "types",
+      "status": "passed",
+      "startMs": 3020.7622799999954,
+      "durationMs": 4977.507419000001
+    },
+    {
+      "name": "tests",
+      "status": "failed",
+      "startMs": 3020.765459999995,
+      "error": "docker run --name labca-custom-f0ad1b59-db2-tests failed: 1\n actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at tests/status.test.ts:1:344\n✖ latency or errors independently cause degradation (3.297968ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'operational'\n  - 'degraded'\n  \n      at TestContext.<anonymous> (/app/tests/status.test.ts:4:143)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'operational',\n    expected: 'degraded',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at tests/status.test.ts:1:695\n✖ changing configuration changes real classifications (0.575678ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'operational'\n  - 'degraded'\n  \n      at TestContext.<anonymous> (/app/tests/status.test.ts:6:71)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'operational',\n    expected: 'degraded',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+      "durationMs": 3319.109135000006
+    }
+  ],
+  "releaseEligible": false,
+  "startedAt": "2026-10-22T06:57:24.992Z",
+  "externalCache": {
+    "enabled": false,
+    "available": false
+  },
+  "cache": {
+    "declaredDependencyStep": "npm ci",
+    "dependencyLayerReused": true,
+    "cachedLogLines": [
+      "#6 CACHED",
+      "#7 CACHED",
+      "#8 CACHED"
+    ]
+  },
+  "error": "docker run --name labca-custom-f0ad1b59-db2-tests failed: 1\n actual: false,\n    expected: true,\n    operator: '==',\n    diff: 'simple'\n  }\n\ntest at tests/status.test.ts:1:344\n✖ latency or errors independently cause degradation (3.297968ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'operational'\n  - 'degraded'\n  \n      at TestContext.<anonymous> (/app/tests/status.test.ts:4:143)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'operational',\n    expected: 'degraded',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n\ntest at tests/status.test.ts:1:695\n✖ changing configuration changes real classifications (0.575678ms)\n  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n  + actual - expected\n  \n  + 'operational'\n  - 'degraded'\n  \n      at TestContext.<anonymous> (/app/tests/status.test.ts:6:71)\n      at Test.runInAsyncScope (node:async_hooks:227:14)\n      at Test.run (node:internal/test_runner/test:1402:25)\n      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)\n      at Test.postRun (node:internal/test_runner/test:1542:19)\n      at Test.run (node:internal/test_runner/test:1467:12)\n      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {\n    generatedMessage: true,\n    code: 'ERR_ASSERTION',\n    actual: 'operational',\n    expected: 'degraded',\n    operator: 'strictEqual',\n    diff: 'simple'\n  }\n",
+  "elapsedMs": 7998.961949999997,
+  "finishedAt": "2026-10-22T06:57:32.992Z",
+  "expected": "blocked",
+  "expectationMet": true
+}

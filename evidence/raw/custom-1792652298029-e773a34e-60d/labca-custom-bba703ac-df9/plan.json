@@ -1,0 +1,68 @@
+{
+  "dockerfile": "ARG BASE_IMAGE\nFROM ${BASE_IMAGE} AS workspace\nWORKDIR /app\nCOPY package.json package-lock.json ./\nRUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund\nCOPY . ./\n",
+  "checks": [
+    {
+      "name": "lint",
+      "command": [
+        "npm",
+        "run",
+        "lint"
+      ]
+    },
+    {
+      "name": "types",
+      "command": [
+        "npm",
+        "run",
+        "types"
+      ]
+    },
+    {
+      "name": "tests",
+      "command": [
+        "npm",
+        "test"
+      ]
+    }
+  ],
+  "parallelism": 3,
+  "build": {
+    "command": [
+      "npm",
+      "run",
+      "build"
+    ],
+    "output": "/app/dist"
+  },
+  "runtimeDockerfile": "ARG BASE_IMAGE\nFROM ${BASE_IMAGE}\nWORKDIR /app\nENV NODE_ENV=production\nCOPY --chown=node:node . ./\nUSER node\nEXPOSE 3000\nCMD [\"node\",\"server.mjs\"]\n",
+  "verification": {
+    "command": [
+      "node",
+      "verify.mjs"
+    ],
+    "expected": {
+      "application": "statuslens",
+      "serviceCount": 4,
+      "degradedCount": 1,
+      "errorRateLimit": 0.02,
+      "assetsServed": true
+    },
+    "changedExpected": {
+      "application": "statuslens",
+      "serviceCount": 4,
+      "degradedCount": 2,
+      "errorRateLimit": 0.01,
+      "assetsServed": true
+    }
+  },
+  "baseImage": "node@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205",
+  "runtimeBaseImage": "node@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205",
+  "resources": {
+    "beforeParallelism": 3,
+    "parallelism": 3,
+    "timeoutSeconds": 600,
+    "cpus": 1,
+    "memory": "1g",
+    "network": "none"
+  }
+}

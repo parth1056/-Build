@@ -1,0 +1,108 @@
+
+> inventory-reservations-api@1.0.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts
+
+✖ available stock excludes reservations (5.465254ms)
+✖ reorder threshold is strict and configurable (0.420262ms)
+✖ reservation is applied once across retries (4.582334ms)
+✔ idempotency key cannot be reused for another order (0.889944ms)
+✖ overselling is blocked without mutation (0.399159ms)
+✔ bad quantities, unknown fields and absent SKUs rejected (1.584713ms)
+✔ caller mutation cannot alter stored stock (2.360098ms)
+✔ API serves health, stock and configurable reorder list (50.75408ms)
+✔ API uses status codes for invalid, absent and excessive reservations (10.625664ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 5
+ℹ fail 4
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1473.846109
+
+✖ failing tests:
+
+test at tests/domain.test.ts:1:229
+✖ available stock excludes reservations (5.465254ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  9 !== 8
+  
+      at TestContext.<anonymous> (/app/tests/domain.test.ts:4:57)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 9,
+    expected: 8,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/domain.test.ts:1:314
+✖ reorder threshold is strict and configurable (0.420262ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (/app/tests/domain.test.ts:5:104)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/domain.test.ts:1:491
+✖ reservation is applied once across retries (4.582334ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    {
+  +   available: 6,
+  -   available: 5,
+      quantity: 3,
+      sku: 'A'
+    }
+  
+      at TestContext.<anonymous> (/app/tests/domain.test.ts:6:127)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: { sku: 'A', quantity: 3, available: 6 },
+    expected: { sku: 'A', quantity: 3, available: 5 },
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at tests/domain.test.ts:1:994
+✖ overselling is blocked without mutation (0.399159ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (/app/tests/domain.test.ts:8:84)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /INSUFFICIENT_STOCK/,
+    operator: 'throws',
+    diff: 'simple'
+  }

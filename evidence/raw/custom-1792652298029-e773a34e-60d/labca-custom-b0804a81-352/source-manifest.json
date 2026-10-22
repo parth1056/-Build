@@ -1,0 +1,89 @@
+{
+  "sha256": "58990d53a139cb02e80805423ca7190b903b73d89058cab4ea2e542b2e5fa09b",
+  "files": [
+    {
+      "path": ".dockerignore",
+      "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+    },
+    {
+      "path": "Dockerfile.after",
+      "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+    },
+    {
+      "path": "Dockerfile.runtime",
+      "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+    },
+    {
+      "path": "eslint.config.mjs",
+      "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+    },
+    {
+      "path": "index.html",
+      "sha256": "ca480a9539a4368337faacf722648f4a08cf8ec29e7a3da4b1c4abc09c71922f"
+    },
+    {
+      "path": "package-lock.json",
+      "sha256": "54cf2fbe2af4af72a5712091b4fb66fd474dd90e025c4cc73b1264dfb74a24ab"
+    },
+    {
+      "path": "package.json",
+      "sha256": "7fdab4326bb1fa4f7891019f41b0d65f188dad12369319439785b6ce582928ea"
+    },
+    {
+      "path": "pipeline-lab.json",
+      "sha256": "e7638e351e3782e2b41ce6c2569e341f8494f8eeb3f6c0c95107f1cd6dd2aef4"
+    },
+    {
+      "path": "scripts/build.mjs",
+      "sha256": "74202ccbe342b68c96120a6de0e6ca68fd69b2be5eb7c5bf7536ff5a6824d9cb"
+    },
+    {
+      "path": "scripts/server.mjs",
+      "sha256": "a39e38acfcc270adf12465dd21b81c1ef32798c61d19d5db8f948b391499e0db"
+    },
+    {
+      "path": "scripts/verify.mjs",
+      "sha256": "7c9ad1cbe021c81a70a7b4bc1f6fe3351faadf2e1a2858b30474dd0e3c1114fa"
+    },
+    {
+      "path": "src/App.tsx",
+      "sha256": "6d0de5fb6a70bbf61ce0b30a9da89cfad7fb4c915feaf027c36a48025344ebfd"
+    },
+    {
+      "path": "src/config.json",
+      "sha256": "dcddf6dd8c5344693fd3d28a0426d00fe9c1ec5c6beb1cd35fbe59f7a0f42e2b"
+    },
+    {
+      "path": "src/main.tsx",
+      "sha256": "c205fcfd7d78e469ed2c1dbfef36050474104b2653fa1d74f15f51852de4db46"
+    },
+    {
+      "path": "src/services.json",
+      "sha256": "971dc905a3041363291545404224803fd19ec28e51565f0a8bbdaea3566e2fa8"
+    },
+    {
+      "path": "src/status.ts",
+      "sha256": "4fb25b61afe31e40523cf31aa6d71980ebb6a9f812687fe6a024e564b9488a3c"
+    },
+    {
+      "path": "src/style.css",
+      "sha256": "3862de319b76851f991fc3f85e13bd3e72c5aee13637326dbf2e2863d0d97eb1"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "tests/render.test.tsx",
+      "sha256": "3e6f62cb5c0a636822f92eef16c471dcea6fdfdc8860985ea845df8c57bd6169"
+    },
+    {
+      "path": "tests/status.test.ts",
+      "sha256": "9ee4cdd6ba30ee3cdfaf496df0f1edfdd86173b34319024eecb10d109a86d212"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "9ee49994f2bc6432e05c86b325aecf80423e81c7a3cc877c0da5fedfae821594"
+    }
+  ]
+}

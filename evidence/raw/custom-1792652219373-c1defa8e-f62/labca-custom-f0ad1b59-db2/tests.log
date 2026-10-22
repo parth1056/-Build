@@ -1,0 +1,82 @@
+
+> statuslens-dashboard@1.0.0 test
+> node --import tsx --test --test-concurrency=1 tests/*.test.ts tests/*.test.tsx
+
+✖ dashboard renders supplied classifications and thresholds (15.774486ms)
+✔ healthy service remains operational (4.259974ms)
+✖ latency or errors independently cause degradation (3.297968ms)
+✔ exact threshold is not exceeded (0.35047ms)
+✖ changing configuration changes real classifications (0.575678ms)
+✔ invalid observations, limits and duplicate names rejected (2.465134ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 3
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1482.40197
+
+✖ failing tests:
+
+test at tests/render.test.tsx:1:231
+✖ dashboard renders supplied classifications and thresholds (15.774486ms)
+  AssertionError [ERR_ASSERTION]: degraded
+      at TestContext.<anonymous> (/app/tests/render.test.tsx:2:311)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at tests/status.test.ts:1:344
+✖ latency or errors independently cause degradation (3.297968ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'operational'
+  - 'degraded'
+  
+      at TestContext.<anonymous> (/app/tests/status.test.ts:4:143)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'operational',
+    expected: 'degraded',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/status.test.ts:1:695
+✖ changing configuration changes real classifications (0.575678ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'operational'
+  - 'degraded'
+  
+      at TestContext.<anonymous> (/app/tests/status.test.ts:6:71)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'operational',
+    expected: 'degraded',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

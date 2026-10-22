@@ -1,0 +1,50 @@
+{
+  "schema": 1,
+  "startedAt": "2026-10-22T06:54:32.652Z",
+  "status": "completed",
+  "campaigns": [
+    {
+      "label": "inventory cold-cache check",
+      "id": "custom-1792652072658-693e8b0b-6a1",
+      "status": "completed"
+    },
+    {
+      "label": "inventory broken-change rejection",
+      "id": "custom-1792652135711-a9e3c76a-5c3",
+      "status": "completed"
+    },
+    {
+      "label": "dashboard cold-cache check",
+      "id": "custom-1792652164791-48c200df-0c6",
+      "status": "completed"
+    },
+    {
+      "label": "dashboard broken-change rejection",
+      "id": "custom-1792652219373-c1defa8e-f62",
+      "status": "completed"
+    },
+    {
+      "label": "Custom CLI engine: repository build",
+      "id": "custom-1792652255754-cea7060e-f6d",
+      "status": "completed"
+    },
+    {
+      "label": "Custom CLI engine: portable-cache restore",
+      "id": "custom-1792652278549-7bda46d5-a8c",
+      "status": "completed"
+    },
+    {
+      "label": "dashboard repeated changed-source study",
+      "id": "custom-1792652298029-e773a34e-60d",
+      "status": "completed"
+    },
+    {
+      "label": "inventory repeated changed-source study",
+      "id": "custom-1792652527965-fc36f74c-3d7",
+      "status": "completed"
+    }
+  ],
+  "finishedAt": "2026-10-22T07:05:39.546Z",
+  "pipelines": 34,
+  "note": "Only this fresh study is published; development pilots are excluded. Exact artifact payloads and Docker images remain local. Source snapshots, plans, hashes, observed outputs and stage logs are bundled."
+}

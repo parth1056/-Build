@@ -1,0 +1,14 @@
+
+> statuslens-dashboard@1.0.0 build
+> node scripts/build.mjs
+
+vite v8.3.5 building client environment for production...
+transforming...
+✓ 16 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.37 kB │ gzip:  0.27 kB
+dist/assets/index-D6GF8ZIE.css    0.80 kB │ gzip:  0.42 kB
+dist/assets/index-CPImMlLs.js   220.63 kB │ gzip: 69.06 kB
+
+✓ built in 147ms

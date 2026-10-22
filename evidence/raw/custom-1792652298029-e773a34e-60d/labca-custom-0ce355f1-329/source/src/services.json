@@ -1,0 +1,1 @@
+[{"name":"Authentication","latencyMs":85,"errorRate":0.001,"uptime":99.99},{"name":"Payments","latencyMs":140,"errorRate":0.015,"uptime":99.95},{"name":"Search","latencyMs":260,"errorRate":0.004,"uptime":99.9},{"name":"Notifications","latencyMs":100,"errorRate":0.002,"uptime":99.99}]

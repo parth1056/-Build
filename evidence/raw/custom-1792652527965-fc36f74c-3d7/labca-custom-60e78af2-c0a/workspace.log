@@ -1,0 +1,51 @@
+#0 building with "labca-custom-b-fc36f74c-3d7" instance using docker-container driver
+
+#1 [internal] load build definition from Dockerfile.before
+#1 transferring dockerfile: 185B done
+#1 WARN: InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)
+#1 DONE 0.0s
+
+#2 [context labbase] load metadata for docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205
+#2 DONE 0.0s
+
+#3 [internal] load .dockerignore
+#3 transferring context: 89B done
+#3 DONE 0.0s
+
+#4 [context labbase] OCI load from client
+#4 resolve docker.io/library/labbase@sha256:55fb5f5a527ea2c5c4a95f963e48ef90aa38c7b346054fdc8ee9957a2b55d205 done
+#4 DONE 0.0s
+
+#5 [internal] load build context
+#5 transferring context: 76.22kB done
+#5 DONE 0.0s
+
+#6 [workspace 1/4] WORKDIR /app
+#6 CACHED
+
+#7 [workspace 2/4] COPY . ./
+#7 DONE 0.0s
+
+#8 [workspace 3/4] RUN --mount=type=cache,target=/root/.npm npm ci --no-audit --no-fund
+#8 1.363 
+#8 1.363 added 104 packages in 1s
+#8 1.365 npm warn install-scripts 1 package has install scripts not yet covered by allowScripts:
+#8 1.365 npm warn install-scripts   esbuild@0.28.2 (postinstall: node install.js)
+#8 1.365 npm warn install-scripts
+#8 1.365 npm warn install-scripts Run `npm install-scripts ls` to review, or `npm install-scripts approve <pkg>` to allow.
+#8 DONE 2.0s
+
+#9 exporting to oci image format
+#9 exporting layers
+#9 exporting layers 1.9s done
+#9 exporting manifest sha256:b2a164800242e8e68f993d0e9a58bc397799ac523c2644862610a75eb1b73372 done
+#9 exporting config sha256:18e534364e48255cffda909e2d8fadeb114379b7ee7c47d8e705a91d9cae6c83 done
+#9 sending tarball
+#9 sending tarball 2.0s done
+#9 DONE 3.9s
+
+#10 importing to docker
+#10 DONE 0.0s
+
+ [33m1 warning found (use docker --debug to expand):
+[0m - InvalidDefaultArgInFrom: Default value for ARG ${BASE_IMAGE} results in empty or invalid base image name (line 2)

@@ -1,0 +1,185 @@
+{
+  "id": "labca-custom-afc13388-1d0",
+  "mode": "after",
+  "scenario": "seed",
+  "purpose": "preparation",
+  "repetition": 1,
+  "status": "passed",
+  "source": {
+    "sha256": "bf7262827920315b25f53ee561338219348da06b3fd486642dc54614ec9110e4",
+    "files": [
+      {
+        "path": ".dockerignore",
+        "sha256": "76e0e2e5ec20cacff85c4a04b46dd2959c0f88470dc2ad5fc2bebbf78836080d"
+      },
+      {
+        "path": "Dockerfile.after",
+        "sha256": "792ee7a30ca5c300dfc2773092813e3373d87aaf8011d36128784d941c58b5d8"
+      },
+      {
+        "path": "Dockerfile.before",
+        "sha256": "c33ee7980a62e5cfd48b166c41f5b2c521e0c10fd60c177c1e1a57e8b2cb3478"
+      },
+      {
+        "path": "Dockerfile.runtime",
+        "sha256": "29090ba393496d37530d106740a7d9571bcaff4c1749cca772eb5a68013b5617"
+      },
+      {
+        "path": "eslint.config.mjs",
+        "sha256": "347eda9f7e778febb397d5baa09c68d618f132618f9a40a79a4f46c6fc5a5641"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "3a7eb7bafe47612bd3a7d6fab0d3294f1de9b02058a90135ed6cb6e763860321"
+      },
+      {
+        "path": "package.json",
+        "sha256": "f5f9f74675c0a74dc21daefd2c82497b32cb063fc48f6c5e908427e1a4e5e44b"
+      },
+      {
+        "path": "pipeline-lab.json",
+        "sha256": "c02322b049d5b193119f362f6abf5c800e20f1985795fd04e5aa7b62881da3e0"
+      },
+      {
+        "path": "scripts/build.mjs",
+        "sha256": "3bb216f2aeabf0d843e353be3aa874bc6907377b4850230a631828ab7da4363c"
+      },
+      {
+        "path": "scripts/server.mjs",
+        "sha256": "19f4a7d075dbc11e9bb2d695aac7024a92f4d348ff7b1cdbfa8e32bce81723ea"
+      },
+      {
+        "path": "scripts/verify.mjs",
+        "sha256": "05761398d631eebe072ebc0567cb4f3fbf08f6e3b12a1a61c66ad004b72d3724"
+      },
+      {
+        "path": "src/app.ts",
+        "sha256": "07db8c028eb6a15e99e82dc87edb6d717f26e9fa129eb6f4af89f932e3e28c01"
+      },
+      {
+        "path": "src/config.json",
+        "sha256": "2c646264329c1997979991e7c0ad615cb7fdfa4f24003df015b6690f5ed6fe03"
+      },
+      {
+        "path": "src/domain.ts",
+        "sha256": "e6fcccef6e8f60ad72bc2841e8bc3135660a065bc98e03cd99f95416d50c817a"
+      },
+      {
+        "path": "src/stock.json",
+        "sha256": "478c661a67bf335821ba8c11a91fc752cd53a9b41c83c322bbebf7b1c5d9ad91"
+      },
+      {
+        "path": "tests/domain.test.ts",
+        "sha256": "30aacdf4d5846f44934d35d95cc496c9243f1c7c4d43f177f367b3b8da372375"
+      },
+      {
+        "path": "tests/http.test.ts",
+        "sha256": "26682112afde293e3d087d8248bfa23623a4cd15a4bbe8143aae541905cd49b9"
+      },
+      {
+        "path": "tsconfig.json",
+        "sha256": "b66121ef3c5cf0da021747bd0f455f3747c2d6604d8c0243682f6fcc92553c61"
+      }
+    ]
+  },
+  "planHash": "05e4d57a0ec10b51b67d53385683a8afbf1625f121640f44a3aae1f1aabd3d65",
+  "parallelism": 3,
+  "stages": [
+    {
+      "name": "workspace",
+      "status": "passed",
+      "startMs": 0.014754000003449619,
+      "durationMs": 11055.632590000052
+    },
+    {
+      "name": "lint",
+      "status": "passed",
+      "startMs": 11056.290122000035,
+      "durationMs": 3683.578426000022
+    },
+    {
+      "name": "types",
+      "status": "passed",
+      "startMs": 11056.300999000028,
+      "durationMs": 3989.3559280000045
+    },
+    {
+      "name": "tests",
+      "status": "passed",
+      "startMs": 11056.304087000026,
+      "durationMs": 3346.1635910000186
+    },
+    {
+      "name": "build",
+      "status": "passed",
+      "startMs": 15046.399089000013,
+      "durationMs": 628.5831750000361
+    },
+    {
+      "name": "package",
+      "status": "passed",
+      "startMs": 15675.674102000019,
+      "durationMs": 1551.368300000031
+    },
+    {
+      "name": "verify",
+      "status": "passed",
+      "startMs": 17252.953549000027,
+      "durationMs": 394.2872470000293
+    }
+  ],
+  "releaseEligible": true,
+  "startedAt": "2026-10-22T07:02:47.887Z",
+  "externalCache": {
+    "enabled": false,
+    "available": false
+  },
+  "cache": {
+    "declaredDependencyStep": "npm ci",
+    "dependencyLayerReused": false,
+    "cachedLogLines": []
+  },
+  "artifacts": {
+    "sha256": "b91aa3fef1ea108bbf6e396cc7771a3cd99cba5813bec3b4741d5f8788fc1ddf",
+    "files": [
+      {
+        "path": "app.mjs",
+        "sha256": "6aa0bf747290e3cb5d1ff9d1589d793312148700eff90ed400a929df04573f9a"
+      },
+      {
+        "path": "README.txt",
+        "sha256": "0cbda014ccf3ae14ca5b5169320d610e9025f03efc295cf9aab0cd55ff2ac48e"
+      },
+      {
+        "path": "server.mjs",
+        "sha256": "a509139a1a2f156684ead63e96949bab2fc03fd33498ab7d77227cb914550117"
+      },
+      {
+        "path": "verify.mjs",
+        "sha256": "bb7e37410332c7613fcd64a081ce627abdea5e4390846fe30af7d36869633dab"
+      }
+    ]
+  },
+  "imageId": "sha256:7d772b3b3af7c2bb2c25ac2a32ce34d770ed357b97e3ba3ef9bcef686e9c4496",
+  "imageTag": "labca-custom/inventory-reservations:labca-custom-afc13388-1d0",
+  "output": {
+    "application": "inventory-reservations",
+    "reorderThreshold": 20,
+    "reorderCount": 2,
+    "reservationAccepted": true,
+    "duplicateStable": true,
+    "overReserveBlocked": true
+  },
+  "expectedOutput": {
+    "application": "inventory-reservations",
+    "reorderThreshold": 20,
+    "reorderCount": 2,
+    "reservationAccepted": true,
+    "duplicateStable": true,
+    "overReserveBlocked": true
+  },
+  "elapsedMs": 17647.800005000026,
+  "finishedAt": "2026-10-22T07:03:05.536Z",
+  "expected": "passed",
+  "expectationMet": true
+}

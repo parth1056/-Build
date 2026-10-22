@@ -1,0 +1,10 @@
+import {test} from 'node:test';import assert from 'node:assert/strict';
+import {inventory,available,reorder} from '../src/domain.js';
+const seed=[{sku:'A',name:'Adapter',onHand:10,reserved:2},{sku:'B',name:'Cable',onHand:30,reserved:0}];
+test('available stock excludes reservations',()=>assert.equal(available(seed[0]!),8));
+test('reorder threshold is strict and configurable',()=>{assert.equal(reorder(seed,8).length,0);assert.equal(reorder(seed,9).length,1);assert.equal(reorder(seed,31).length,2);});
+test('reservation is applied once across retries',()=>{const s=inventory(seed),body={sku:'A',quantity:3,key:'order-1'};assert.deepEqual(s.reserve(body),{sku:'A',quantity:3,available:5});assert.deepEqual(s.reserve(body),{sku:'A',quantity:3,available:5});assert.equal(s.list()[0]!.reserved,5);});
+test('idempotency key cannot be reused for another order',()=>{const s=inventory(seed);s.reserve({sku:'A',quantity:1,key:'x'});assert.throws(()=>s.reserve({sku:'A',quantity:2,key:'x'}),/IDEMPOTENCY_CONFLICT/);});
+test('overselling is blocked without mutation',()=>{const s=inventory(seed);assert.throws(()=>s.reserve({sku:'A',quantity:9,key:'x'}),/INSUFFICIENT_STOCK/);assert.equal(s.list()[0]!.reserved,2);});
+test('bad quantities, unknown fields and absent SKUs rejected',()=>{for(const quantity of [0,-1,1.5,1001])assert.throws(()=>inventory(seed).reserve({sku:'A',quantity,key:'x'}));assert.throws(()=>inventory(seed).reserve({sku:'A',quantity:1,key:'x',admin:true}));assert.throws(()=>inventory(seed).reserve({sku:'missing',quantity:1,key:'x'}),/SKU_NOT_FOUND/);});
+test('caller mutation cannot alter stored stock',()=>{const s=inventory(seed);s.list()[0]!.reserved=999;assert.equal(s.list()[0]!.reserved,2);assert.equal(seed[0]!.reserved,2);});
