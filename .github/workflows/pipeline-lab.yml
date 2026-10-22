@@ -43,3 +43,46 @@ jobs:
           path: .lab/custom-evidence/
           include-hidden-files: true
           retention-days: 14
+  study:
+    if: github.ref == 'refs/heads/codex/two-app-fresh-demo' && (github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[study]'))
+    needs: ci
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: codex/two-app-fresh-demo
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - uses: docker/setup-docker-action@7ec28a010822b4626af4874f9448a4b05ac6f3e5
+        with:
+          version: v28.0.4
+          daemon-config: '{"features":{"containerd-snapshotter":true}}'
+      - name: Run a completely fresh controlled study on this runner
+        run: |
+          npm run study
+          node scripts/export-evidence.mjs
+          npm run audit
+      - name: Retain hosted study even if publication fails
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: fresh-study-${{ github.run_id }}
+          include-hidden-files: true
+          retention-days: 14
+          path: |
+            evidence/
+            docs/RESULTS.md
+            .lab/study.json
+            .lab/custom-evidence/
+      - name: Publish audited study to this branch
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add evidence docs/RESULTS.md
+          git commit -m 'Record fresh hosted two-app study and raw evidence [skip ci]'
+          git push origin HEAD:codex/two-app-fresh-demo
