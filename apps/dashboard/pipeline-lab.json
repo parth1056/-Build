@@ -71,7 +71,10 @@
   "failure": {
     "file": "src/status.ts",
     "from": "x.latencyMs>config.latencyLimitMs||x.errorRate>config.errorRateLimit",
-    "to": "x.latencyMs>config.latencyLimitMs&&x.errorRate>config.errorRateLimit"
+    "to": "x.latencyMs>config.latencyLimitMs&&x.errorRate>config.errorRateLimit",
+    "check": "tests",
+    "exitCode": 1,
+    "logContains": "ERR_ASSERTION"
   },
   "dependencyStep": "npm ci",
   "exclude": [

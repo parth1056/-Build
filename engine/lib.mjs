@@ -21,7 +21,7 @@ export function exec(bin, args, { cwd=root, log, onData=()=>{}, allowFailure=fal
     const timer=setTimeout(()=>{timedOut=true;process.kill();},timeout);
     let error;
     process.on('error',e=>{error=e;});
-    process.on('close',async code=>{clearTimeout(timer); try {if(log){await mkdir(dirname(log),{recursive:true});await writeFile(log,chunks.join(''));} if(error)throw error; if((code!==0||timedOut)&&!allowFailure)throw new Error(`${bin} ${args.slice(0,3).join(' ')} failed: ${timedOut?'timeout':code}\n${output.slice(-1800)}`); resolve({code,output,timedOut});}catch(e){reject(e);}});
+    process.on('close',async code=>{clearTimeout(timer); try {if(log){await mkdir(dirname(log),{recursive:true});await writeFile(log,chunks.join(''));} if(error)throw error; if((code!==0||timedOut)&&!allowFailure){const failure=new Error(`${bin} ${args.slice(0,3).join(' ')} failed: ${timedOut?'timeout':code}\n${output.slice(-1800)}`);failure.exitCode=timedOut?null:code;throw failure;} resolve({code,output,timedOut});}catch(e){reject(e);}});
   });
 }
 export const median = list => { if(!list.length) return null; const n=[...list].sort((a,b)=>a-b),m=Math.floor(n.length/2); return n.length%2?n[m]:(n[m-1]+n[m])/2; };

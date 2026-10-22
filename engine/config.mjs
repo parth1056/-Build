@@ -42,6 +42,7 @@ export function validateRequest(c,r){
  if(r.mode!=='after'&&!c.workspace.before)fail('Before/compare requires workspace.before; the CLI does not invent a baseline');
  if(['code-change','failure'].includes(r.scenario)&&!c.change)fail('This scenario requires a declared source change and changed-output assertions');
  if(r.scenario==='failure'&&(!c.failure||r.mode!=='after'||r.repeats!==1))fail('Failure proof requires failure fixture, mode after and one repetition');
+ if(r.scenario==='failure'&&(!c.checks.some(x=>x.name===c.failure.check)||typeof c.failure.logContains!=='string'||!c.failure.logContains||c.failure.logContains.length>200||!Number.isInteger(c.failure.exitCode??1)||(c.failure.exitCode??1)<1||(c.failure.exitCode??1)>124))fail('Failure proof needs a named required check, expected exitCode 1–124 and an assertion logContains marker');
  if(r.scenario==='repository'&&(r.mode!=='after'||r.repeats!==1))fail('Repository builds run mode after once; choose an explicit controlled scenario for comparisons');
  return r;
 }

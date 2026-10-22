@@ -58,7 +58,9 @@ The study executes 34 real pipelines: cold comparisons and fault proofs for both
 
 ## GitHub Actions
 
-The workflow on this branch runs the coordinator tests and a real optimized build for **both apps**, restores/saves portable BuildKit layers and retains exact-image verification evidence. This is ordinary CI, distinct from the controlled before/after study. Checks rerun on every candidate. GitHub cache transport and runner setup add workflow time outside the pipeline measurement. No Jenkins or production deployment is involved.
+The workflow on this branch runs the coordinator tests and a real optimized build for **both apps**, restores/saves portable BuildKit layers and retains exact-image verification evidence. It also checks both fault fixtures using explicit expected assertions, so an unrelated Docker failure cannot pass as a successful bug rejection. This is ordinary CI, distinct from the controlled before/after study. Checks rerun on every candidate. GitHub cache transport and runner setup add workflow time outside the pipeline measurement. No Jenkins or production deployment is involved.
+
+The committed full study was executed on one GitHub Actions runner; local development preflights were excluded rather than mixed into its results. **Actions → Two-app pipeline lab → Run workflow → select this branch** runs CI plus a complete new study and publishes audited evidence back to this branch. A source commit whose message contains `[study]` also requests that full study. Ordinary pushes run CI only. Publishing study results requires the study job's repository-scoped write token; it targets only this branch and uses a non-forced push. Local reproduction commands above remain available.
 
 ## Folders
 
@@ -72,3 +74,5 @@ The workflow on this branch runs the coordinator tests and a real optimized buil
 - `.lab/`: ignored local caches, snapshots, artifacts and custom results; not old-project data.
 
 The pipeline creates final images under `labca-custom/<app>:<run-id>` and keeps them for inspection. Check/build containers, temporary workspace images and the owned builder are cleaned. A failed verification image may remain but is explicitly ineligible. This is a trusted local development tool, not a hostile-code upload service.
+
+For a local eligible image, copy its `imageTag` or `imageId` from the run record and run `docker run --rm -p 127.0.0.1:3001:3000 <image>`. StatusLens opens at `http://127.0.0.1:3001`; the API exposes `/inventory` and `/reorder` there. Stop that container after inspecting it. Hosted image IDs exist only on their ephemeral runner; build locally first to obtain a local image. Hosted artifact payloads are retained in the workflow download for its stated retention period, while source/plan/log evidence is committed independently of that expiry.

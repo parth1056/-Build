@@ -73,7 +73,10 @@
   "failure": {
     "file": "src/domain.ts",
     "from": "item.onHand-item.reserved",
-    "to": "item.onHand-item.reserved+1"
+    "to": "item.onHand-item.reserved+1",
+    "check": "tests",
+    "exitCode": 1,
+    "logContains": "ERR_ASSERTION"
   },
   "dependencyStep": "npm ci",
   "exclude": [

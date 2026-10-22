@@ -4,6 +4,7 @@ import {resolve,join,dirname,sep} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {root,readJSON,save,exec,hash,median} from './lib.mjs';
 import {validateConfig,validateRequest,safeRelative,validateDockerfile,copyProject,hashDirectory,assertExpected} from './config.mjs';
+import {verifyFailureProof} from './proof.mjs';
 const owned=x=>{if(!/^labca-custom-[a-z0-9-]+$/.test(x))throw Error('Unowned Docker resource rejected');return x;};
 const lab=join(root,'.lab');
 const insideLab=p=>{const path=resolve(p);if(!path.startsWith(resolve(lab)+sep))throw Error('Custom cleanup outside .lab rejected');return path;};
@@ -62,7 +63,7 @@ export async function runCustom(options){
    r.externalCache={enabled:persistent,available:persistent&&existsSync(join(cache,'index.json'))};if(persistent)await cleanup(cacheNext);
    const begin=performance.now();
    async function stage(name,fn){if(existsSync(join(folder,'cancel.request')))cancelled=true;if(cancelled)throw Error('Cancelled by user');const s={name,status:'running',startMs:performance.now()-begin};r.stages.push(s);await persist();event('stage-start',{run:runId,name});
-    try{return await fn({log:join(dir,name+'.log'),onData:text=>{if(process.env.CUSTOM_VERBOSE==='1')process.stdout.write(text);}}).then(value=>{s.status='passed';return value;});}catch(e){s.status='failed';s.error=e.message;throw e;}finally{s.durationMs=performance.now()-begin-s.startMs;await persist();}}
+    try{return await fn({log:join(dir,name+'.log'),onData:text=>{if(process.env.CUSTOM_VERBOSE==='1')process.stdout.write(text);}}).then(value=>{s.status='passed';return value;});}catch(e){s.status='failed';s.error=e.message;s.exitCode=e.exitCode??null;throw e;}finally{s.durationMs=performance.now()-begin-s.startMs;await persist();}}
    const caps=['--cpus',String(config.options.cpus),'--memory',config.options.memory,'--network',config.options.network];
    try{
     const install=await stage('workspace',io=>docker(['buildx','build','--builder',builder,'--progress','plain','--load',...workspaceBase,'--target',config.workspace.target,'-f',join(source,dockerfile),'-t',workspace,...(r.externalCache.available?['--cache-from',`type=local,src=${cache}`]:[]),...(persistent?['--cache-to',`type=local,dest=${cacheNext},mode=max`]:[]),source],io));
@@ -78,7 +79,7 @@ export async function runCustom(options){
    }catch(e){r.status=cancelled?'cancelled':'failed';r.error=e.message;}
    finally{
     r.elapsedMs=performance.now()-begin;r.finishedAt=new Date().toISOString();r.expected=purpose==='proof'&&scenario==='failure'?'blocked':'passed';
-    r.expectationMet=r.expected==='blocked'?r.status==='failed'&&!r.releaseEligible&&!r.stages.some(s=>s.name==='package')&&r.stages.some(s=>config.checks.some(c=>c.name===s.name)&&s.status==='failed'):r.status==='passed'&&r.releaseEligible;
+    r.expectationMet=r.expected==='blocked'?verifyFailureProof(r,config.failure,await readFile(join(dir,config.failure.check+'.log'),'utf8').catch(()=>'')):r.status==='passed'&&r.releaseEligible;
     try{await save(join(dir,'result.json'),r);await persist();event('run-end',{run:runId,status:r.status,expected:r.expected,expectationMet:r.expectationMet,seconds:(r.elapsedMs/1000).toFixed(2),image:r.imageTag});}
     finally{for(const name of containers)await docker(['rm','--force',owned(name)],{allowFailure:true,timeout:60000});await docker(['image','rm',workspace],{allowFailure:true,timeout:60000});}
     if(persistent&&r.releaseEligible&&!cancelled){await mkdir(dirname(cache),{recursive:true});await cleanup(cache);await rename(cacheNext,cache);}else if(persistent)await cleanup(cacheNext);

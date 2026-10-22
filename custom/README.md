@@ -52,6 +52,7 @@ The full custom CLI retains the same generic functionality on this fresh branch,
 | `verify.changedExpected` | Required with `change`; distinct assertions for the changed app's observable behavior. |
 | `change` | `{file,from,to}` exact-once source replacement. Declare a real behavioral change. |
 | `failure` | Optional second exact-once replacement, applied after `change`, intended to fail a required check. |
+| `failure.check`, `failure.exitCode`, `failure.logContains` | Required for a failure proof: named required check, expected application exit code (default 1; allowed 1–124), and a nonempty assertion/error marker in its real log. Docker infrastructure exit codes/timeouts or an unrelated failed command are insufficient. The demo uses `tests`, `1`, `ERR_ASSERTION`. |
 | `dependencyStep` | Optional text identifying the actual installation `RUN`, e.g. `npm ci`, for a specific CACHED observation. Missing marker means unknown. |
 | `exclude` | Extra relative path prefixes omitted from source snapshots. |
 | `options.beforeParallelism` | 1–3, default 1; use 3 for a baseline already running three independent checks concurrently. |
