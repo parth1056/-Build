@@ -1,5 +1,5 @@
 {
   "name":"ci-build-time-lab","version":"3.0.0","private":true,"type":"module",
   "engines":{"node":">=22.21.0 <27"},
-  "scripts":{"demo":"node server.mjs","test":"node --test tests/*.test.mjs","custom:build":"node custom/cli.mjs","study":"node scripts/study.mjs","audit":"node scripts/audit.mjs","ci":"node scripts/ci.mjs"}
+  "scripts":{"demo":"node server.mjs","samples":"node scripts/samples.mjs","test":"node --test tests/*.test.mjs","custom:build":"node custom/cli.mjs","study":"node scripts/study.mjs","audit":"node scripts/audit.mjs","ci":"node scripts/ci.mjs"}
 }

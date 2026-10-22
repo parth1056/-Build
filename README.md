@@ -26,6 +26,30 @@ Open **http://127.0.0.1:4180**. Viewing committed results needs only Node. For n
 
 The first build downloads pinned images/dependencies and may take longer. The runner pulls/prepares bases before its pipeline timer; dependency operations in the app Dockerfile are inside it. Keep the terminal running. Ctrl+C requests cancellation and cleanup if a web experiment is active.
 
+## Run just the two sample applications
+
+From this branch's folder, run:
+
+```powershell
+npm.cmd run samples
+```
+
+This installs each app's locked dependencies, builds its current source normally and starts both apps. You need Node and internet for dependency installation; Docker and the pipeline console are unnecessary. It does not run a timing comparison or change saved study results. Every launch rebuilds current source; these startup durations are not benchmark evidence.
+
+- **http://127.0.0.1:4301/inventory** — Inventory API: lists products and stock/reservations as JSON. This application is a backend API, so JSON is its actual interface.
+- **http://127.0.0.1:4301/reorder** — products with available stock below the configured reorder threshold.
+- **http://127.0.0.1:4302** — StatusLens: the actual React dashboard with four service observations and their health classifications. These are sample observations, not live monitoring.
+
+To demonstrate reserving two USB-C cables, run this in a second PowerShell terminal:
+
+```powershell
+Invoke-RestMethod -Method Post -Uri http://127.0.0.1:4301/reservations -ContentType 'application/json' -Body '{"sku":"USB-C","quantity":2,"key":"demo-1"}'
+```
+
+Refresh `/inventory`: USB-C reserved stock increases from 7 to 9, leaving 3 available. Repeat the exact command: the same result returns without reserving another two cables. Change the quantity to 4 **and use a new key** (`demo-2`): the API rejects it because only 3 remain. Reusing a key with a different quantity is also rejected, as a conflicting retry. Stop with **Ctrl+C** in the launcher terminal; both servers stop. Inventory is in memory and resets on restart. Ports 4301/4302 must be free.
+
+These are the same original app sources used as build samples. The experiment separately modifies copied configuration to measure changed-source rebuilds; running these apps directly does not apply that experiment's threshold changes. Their app code and historical evidence remain untouched by this launcher.
+
 ## Demonstrate
 
 Choose **Inventory Reservations API → Compare builds**. The default is one warm source-change observation per method: four actual pipelines including separate seeds. Open **See how the builds ran** to inspect dependency reuse, overlapping checks, the exact Dockerfiles, original/changed configuration, raw logs and observed runtime output. One pair is a preview. Choose three observations for a longer comparison.
