@@ -96,7 +96,7 @@ export async function runCustom(options){
  }catch(e){state.status=cancelled?'cancelled':'aborted';state.error=e.message;event('error',{message:e.message});}
  finally{try{
   if(builder)await docker(['buildx','rm',owned(builder)],{allowFailure:true,timeout:60000});state.finishedAt=new Date().toISOString();state.summary=summarizeCustom(state);await persist();
-  const seconds=x=>x===null?'unavailable':(x/1000).toFixed(2);let md=`# Custom app: ${config.name}\n\nStatus: ${state.status}. Scenario: ${options.scenario}. Results are separate from the two-app demo website.\n\n| Mode | n | Median s | Min–max s |\n|---|---:|---:|---:|\n`;
+  const seconds=x=>x===null?'unavailable':(x/1000).toFixed(2);let md=`# Custom app: ${config.name}\n\nStatus: ${state.status}. Scenario: ${options.scenario}. Results are separate from the comparison website.\n\n| Mode | n | Median s | Min–max s |\n|---|---:|---:|---:|\n`;
   for(const row of state.summary.methods)md+=`| ${row.mode} | ${row.n} | ${seconds(row.medianMs)} | ${seconds(row.minMs)}–${seconds(row.maxMs)} |\n`;
   md+=`\nReduction: ${state.summary.reductionPercent===null?'not attributable':state.summary.reductionPercent.toFixed(1)+'%'}. ${state.summary.note}\n\nSource matched: ${state.summary.sourceMatched}. Adapter-defined output assertions are not an exhaustive correctness proof. Timer excludes setup, seeds and cleanup. Base downloads are outside the timer; Dockerfile dependency-network operations remain inside workspace builds.\n`;
   for(const r of state.runs.filter(r=>r.purpose==='proof'))md+=`\nFault proof: ${r.expectationMet?'expected rejection verified':'NOT VERIFIED'}. Required-check failure and blocked packaging are required.\n`;

@@ -13,5 +13,5 @@ try{
  await record('Custom CLI engine: repository build',options);
  const restored=await record('Custom CLI engine: portable-cache restore',options);assert.equal(restored.runs[0].externalCache.available,true);assert.equal(restored.runs[0].cache.dependencyLayerReused,true);
  for(const app of ['dashboard','inventory'])await record(app+' repeated changed-source study',demoOptions({app,scenario:'code-change',repeats:3}));
- manifest.status='completed';manifest.finishedAt=new Date().toISOString();await persist();console.log('Fresh study complete: '+manifest.campaigns.length+' campaigns. Export with node scripts/export-evidence.mjs.');
+ manifest.status='completed';manifest.finishedAt=new Date().toISOString();await persist();console.log('Controlled study complete: '+manifest.campaigns.length+' campaigns. Export with node scripts/export-evidence.mjs.');
 }catch(e){manifest.status='failed';manifest.error=e.message;await persist();console.error(e);process.exitCode=1;}
