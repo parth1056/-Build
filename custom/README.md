@@ -30,7 +30,7 @@ Example controlled comparison:
 npm.cmd run custom:build -- --project apps/inventory --mode compare --scenario code-change --repeats 3 --trust-project
 ```
 
-The full custom CLI retains the same generic functionality on this fresh branch, but old custom sample apps/measurements were removed. Set `CUSTOM_VERBOSE=1` to stream raw Docker output. Logs are retained either way. Ctrl+C cooperatively requests stopping and cleanup after the current operation.
+The CLI supports current repository builds, controlled comparisons and declared fault proofs. Both included applications supply complete adapter examples.
 
 ## Every adapter field
 

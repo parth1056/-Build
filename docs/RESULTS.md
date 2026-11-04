@@ -1,4 +1,4 @@
-# Fresh two-app results
+# Build results
 
 Generated from a completed, audited study. These are observed timings on the recorded execution host, not promised improvements. Setup, base downloads/preload, source snapshots, seed builds and cleanup are outside the pipeline timer. Workspace construction through exact-image verification is inside; custom Dockerfile dependency installation can use the network.
 
@@ -7,9 +7,9 @@ Generated from a completed, audited study. These are observed timings on the rec
 | Inventory Reservations API | 3 | 14.50 s (14.44 s–14.52 s) | 9.03 s (9.01 s–9.06 s) | 37.7% reduction; 5.47 s difference |
 | StatusLens Dashboard | 3 | 10.89 s (10.87 s–10.91 s) | 10.96 s (10.52 s–11.01 s) | Identical plans: no new optimization attributed |
 
-Inventory changes dependency-layer placement and check scheduling. Dashboard Before/After use the same dependency-first Dockerfile and the same three-check concurrency; differences are repeated-measurement variation. Both use the same pinned BuildKit engine. This does not isolate BuildKit versus a legacy builder. Three observations per method are descriptive, not statistical significance.
+Inventory changes dependency-layer placement and check scheduling. Dashboard Before/After use the same dependency-first Dockerfile and the same three-check concurrency; differences are timing differences without a changed plan. Both use the same pinned BuildKit engine. This does not isolate BuildKit versus a legacy builder. Three observations per method are descriptive, not statistical significance.
 
-The study ran on **GitHub Actions, Ubuntu 24.04.5 LTS, 2 host CPUs and about 7.75 GiB RAM**, using source commit `75d1d0350dcd639242ef9b5f1eefce730ca38c81`. [Actual successful workflow](https://github.com/parth1056/-Build/actions/runs/39736698836). Local preflight measurements were excluded. Each repeated pair used the same changed source and produced an identical artifact-content hash across all six measured builds of that application; Docker image IDs can still differ because image metadata is separate from artifact bytes.
+The study ran on **GitHub Actions, Ubuntu 24.04.5 LTS, 2 host CPUs and about 7.75 GiB RAM**, using source commit `75d1d0350dcd639242ef9b5f1eefce730ca38c81`. [Actual successful workflow](https://github.com/parth1056/-Build/actions/runs/39736698836). Each repeated pair used the same changed source and produced an identical artifact-content hash across all six measured builds of that application; Docker image IDs can still differ because image metadata is separate from artifact bytes.
 
 ## Where the time changed
 
@@ -22,9 +22,9 @@ These are the actual representative runs matching each method's median, not sepa
 | StatusLens Before | 3.01 s | 5.07 s | 0.97 s | 1.51 s | 0.30 s | 10.89 s |
 | StatusLens After | 2.93 s | 5.25 s | 0.96 s | 1.48 s | 0.31 s | 10.96 s |
 
-Inventory's installation layer executed on all three Before measurements and was reused on all three After measurements. Its check block shortened while retaining every required gate. Build/package/verify work largely remained. These representative differences support the proposed mechanisms but are not an isolated causal estimate of each technique; no four-way ablation was performed in this fresh study.
+Inventory's installation layer executed on all three Before measurements and was reused on all three After measurements. Its check block shortened while retaining every required gate. Build/package/verify work largely remained. These representative differences support the proposed mechanisms but are not an isolated causal estimate of each technique; no four-way ablation was performed in this controlled study.
 
-StatusLens reused installation in all six measurements and ran the same three checks concurrently in both methods. The approximately 0.07 s median difference is variation between identical plans, not a newly applied optimization or evidence of a universal performance limit.
+StatusLens reused installation in all six measurements and ran the same three checks concurrently in both methods. The approximately 0.07 s median difference is a timing difference between identical plans, not a newly applied optimization or evidence of a universal performance limit.
 
 Independent Python verification rehashed **660 source files across all 34 pipelines** and checked plan hashes, build gates, runtime output, medians, ranges and percentages. The Node audit additionally checks evidence-file integrity, the intended fault assertion logs and deterministic demo artifact identities. The later fault-proof guard requires the named test's expected application exit code and assertion marker; it changes fault acceptance, not these recorded successful-build timings.
 
